@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e30613" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>Payogum | Servis Takip</title>
+    <link rel="stylesheet" href="/styles.css?v=red-theme-4" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <section id="authView" class="view active">
+        <div class="auth-card">
+          <div class="brand">
+            <img class="brand-mark" src="/oyak-logo.svg?v=official-1" alt="OYAK" />
+            <div>
+              <h1>OYAK SERVİS</h1>
+            </div>
+          </div>
+
+          <div class="auth-tabs">
+            <button class="tab-button active" data-tab="login">Giriş</button>
+            <button class="tab-button" data-tab="register">Kayıt</button>
+          </div>
+
+          <form id="loginForm" class="auth-form active">
+            <label>
+              Sicil Numarası
+              <input type="text" name="sicilNo" placeholder="Sicil Numarası" autocomplete="username" minlength="3" maxlength="20" inputmode="numeric" pattern="[0-9]{3,20}" title="Sicil numarası 3-20 rakamdan oluşmalıdır" required />
+            </label>
+            <label>
+              Şifre
+              <input type="password" name="password" placeholder="Şifre" required />
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="rememberMe" />
+              <span>Beni hatırla</span>
+            </label>
+            <button type="submit" class="primary-button">Giriş Yap</button>
+          </form>
+
+          <form id="registerForm" class="auth-form">
+            <label>
+              Ad Soyad
+              <input type="text" name="name" placeholder="Ad Soyad" required />
+            </label>
+            <label>
+              Telefon Numarası
+              <input type="tel" name="phone" placeholder="05XX XXX XX XX" pattern="(?:05[0-9]{2} ?[0-9]{3} ?[0-9]{2} ?[0-9]{2}|\+90 ?5[0-9]{2} ?[0-9]{3} ?[0-9]{2} ?[0-9]{2})" maxlength="17" title="Türkiye cep telefonu: 05XX XXX XX XX veya +90 5XX XXX XX XX" required />
+            </label>
+            <label>
+              Sicil No
+              <input type="text" name="sicilNo" placeholder="Sicil No" minlength="3" maxlength="20" inputmode="numeric" pattern="[0-9]{3,20}" title="Sicil no 3-20 rakamdan oluşmalıdır" required />
+            </label>
+            <label>
+              Şifre
+              <input type="password" name="password" placeholder="Şifre" required />
+            </label>
+            <div class="role-select">
+              <span class="role-select-label">Rol</span>
+              <div class="role-tabs" role="group" aria-label="Rol seçimi">
+                <button type="button" class="role-tab-button active" data-role="personel" aria-pressed="true">Personel</button>
+                <button type="button" class="role-tab-button" data-role="driver" aria-pressed="false">Sürücü</button>
+              </div>
+              <input type="hidden" name="role" id="registerRole" value="personel" />
+            </div>
+            <button type="submit" class="primary-button">Hesap Oluştur</button>
+          </form>
+
+          <p class="privacy-note">Kayıt olmadan önce <a href="/kvkk.html" target="_blank" rel="noopener noreferrer">KVKK Aydınlatma Metni</a>'ni inceleyin. Hukuki metin, işletmenin gerçek veri işleme süreçlerine göre doğrulanmalıdır.</p>
+          <button id="adminLoginBtn" class="admin-login-button" type="button">Yönetici Girişi</button>
+        </div>
+      </section>
+
+      <section id="dashboardView" class="view">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Servis Takip</p>
+            <h2 id="headerTitle">Panel</h2>
+          </div>
+          <div class="topbar-actions">
+            <img class="oyak-logo" src="/oyak-logo.svg?v=official-1" alt="OYAK" />
+            <span id="connectionStatus" class="connection-status" role="status">Çevrimiçi</span>
+            <button id="themeToggle" class="icon-button" type="button" aria-label="Temayı değiştir">Açık tema</button>
+            <button id="notificationToggle" class="icon-button" type="button" aria-label="Bildirim ayarlarını değiştir">Bildirimler</button>
+            <span id="userBadge" class="badge"></span>
+            <button id="logoutBtn" class="secondary-button">Çıkış</button>
+          </div>
+        </header>
+
+        <div id="adminView" class="role-panel admin-panel">
+          <div class="panel-header">
+            <h3>Yönetici Paneli</h3>
+          </div>
+          <div id="adminStats" class="stats-grid"></div>
+
+          <div class="log-panel service-admin-panel">
+            <h4>Servis Yönetimi</h4>
+            <div class="service-admin-actions">
+              <div>
+                <label>
+                  Servis Numarası
+                  <input id="serviceCodeInput" type="number" min="1" max="99" placeholder="01" />
+                </label>
+              </div>
+              <button id="addServiceBtn" class="primary-button">Servis Ekle</button>
+            </div>
+            <ul id="serviceAdminList" class="notification-list compact"></ul>
+          </div>
+
+        </div>
+
+        <div id="servicePanel" class="service-panel">
+          <div>
+            <label for="serviceSelect">Servis Seçimi</label>
+            <input id="serviceSelect" type="search" placeholder="Servis numarası ara" autocomplete="off" />
+            <div id="serviceOptionList" class="service-options" hidden></div>
+          </div>
+          <button id="joinServiceBtn" class="primary-button">Kanala Bağlan</button>
+        </div>
+
+        <div id="driverView" class="role-panel">
+          <div class="panel-header">
+            <h3>Sürücü Paneli</h3>
+            <span id="driverServiceLabel" class="badge soft">Seçilmemiş</span>
+          </div>
+          <div class="status-box" id="driverStatusBox">
+            Henüz aktif servis seçilmedi.
+          </div>
+
+          <div class="action-group">
+            <h4>Kalkış</h4>
+            <div class="quick-actions">
+              <button class="action-button warning" data-alert="departure_10" data-label="Kalkışa 10 dakika kaldı" data-message="🚌 Kalkışa 10 dakika kaldı." data-stage="departure10">Kalkışa 10 dk</button>
+              <button class="action-button warning alt" data-alert="departure_5" data-label="Kalkışa 5 dakika kaldı" data-message="🚌 Kalkışa 5 dakika kaldı." data-stage="departure5">Kalkışa 5 dk</button>
+              <button class="action-button danger" data-alert="departed" data-label="Sürücü kalkışı gerçekleştirdi" data-message="🚌 Sürücü kalkışı gerçekleştirdi." data-stage="departed">Kalktı</button>
+            </div>
+          </div>
+          <div class="action-group">
+            <h4>Varış</h4>
+            <div class="quick-actions">
+              <button class="action-button warning" data-alert="arrival_10" data-label="Varışa 10 dakika kaldı" data-message="🚌 Varışa 10 dakika kaldı." data-stage="arrival10">Varışa 10 dk</button>
+              <button class="action-button warning alt" data-alert="arrival_5" data-label="Varışa 5 dakika kaldı" data-message="🚌 Varışa 5 dakika kaldı." data-stage="arrival5">Varışa 5 dk</button>
+              <button class="action-button success" data-alert="arrived" data-label="Sürücü varış yaptığını bildirdi" data-message="🚌 Sürücü varış yaptığını bildirdi." data-stage="arrived">Vardı</button>
+            </div>
+          </div>
+          <div class="quick-actions utility-actions">
+            <button class="action-button info" data-alert="delayed" data-label="Rötar bildirimi" data-message="🚌 Serviste gecikme var." data-stage="delayed">Rötar Bildir</button>
+            <button id="shareLocationBtn" class="action-button secondary-location" type="button">Canlı Konum Paylaş</button>
+          </div>
+
+          <form id="messageForm" class="message-form">
+            <label>
+              Özel Mesaj
+              <input type="text" id="messageInput" placeholder="Kısa duyuru yazın" maxlength="120" />
+            </label>
+            <button type="submit" class="primary-button">Gönder</button>
+          </form>
+        </div>
+
+        <div id="personelView" class="role-panel">
+          <div class="panel-header">
+            <h3>Personel Takip</h3>
+            <span id="staffServiceLabel" class="badge soft">Seçilmemiş</span>
+          </div>
+          <div class="status-box" id="staffStatusBox">
+            Aktif servis bildirimi bekleniyor.
+          </div>
+          <div class="quick-actions compact-actions">
+            <button id="requestLocationBtn" class="action-button secondary-location" type="button">Servisim Nerede?</button>
+          </div>
+          <ul id="notificationList" class="notification-list"></ul>
+        </div>
+
+        <div id="adminHistoryPanel" class="role-panel admin-panel">
+          <div class="log-panel">
+            <h4>Hareket Geçmişi</h4>
+            <ul id="adminServiceHistoryList" class="notification-list compact"></ul>
+          </div>
+        </div>
+
+        <div id="adminReportPanel" class="role-panel admin-panel">
+          <div class="log-panel">
+            <h4>Servis Raporları</h4>
+            <input id="adminReportSearch" class="report-search" type="search" placeholder="Servis numarası ara" />
+            <div id="adminReportList" class="report-list"></div>
+            <div id="adminReportDetails" class="report-details" hidden></div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "Payogum Servis Takip",
+  "short_name": "Payogum",
+  "description": "Isdemir ve OYAK servis takip uygulamasi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090909",
+  "theme_color": "#e30613",
+  "orientation": "portrait-primary",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
