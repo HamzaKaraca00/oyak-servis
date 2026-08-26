@@ -12,6 +12,8 @@ const authTabs = document.querySelectorAll('.tab-button');
 const authForms = document.querySelectorAll('.auth-form');
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
+const registerRoleInput = document.getElementById('registerRole');
+const roleTabButtons = document.querySelectorAll('.role-tab-button');
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const serviceSelect = document.getElementById('serviceSelect');
 const serviceOptionList = document.getElementById('serviceOptionList');
@@ -291,7 +293,8 @@ function getCookie(name) {
 
 function authHeaders(extra = {}) {
   const headers = { 'Content-Type': 'application/json', ...extra };
-  const csrfToken = getCookie('payogum_csrf');
+  // Try both development and production cookie names
+  const csrfToken = getCookie('payogum_csrf') || getCookie('__Host-payogum_csrf');
   if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
   return headers;
 }
@@ -367,6 +370,7 @@ async function loadCurrentUser() {
   try {
     const user = await fetchJson('/api/me');
     state.user = user;
+    await loadServices();
     state.selectedServiceId = user.serviceId || state.selectedServiceId;
     renderServiceOptions();
     if (state.selectedServiceId) {
@@ -610,7 +614,8 @@ async function handleRegister(event) {
     name: formData.get('name'),
     phone: formData.get('phone'),
     sicilNo: formData.get('sicilNo'),
-    password: formData.get('password')
+    password: formData.get('password'),
+    role: formData.get('role') || 'personel'
   };
 
   try {
@@ -646,6 +651,18 @@ async function joinSelectedService() {
     render();
   }, 'Bağlandı');
 }
+
+roleTabButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    roleTabButtons.forEach((btn) => {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
+    });
+    button.classList.add('active');
+    button.setAttribute('aria-pressed', 'true');
+    registerRoleInput.value = button.dataset.role;
+  });
+});
 
 loginForm.addEventListener('submit', handleLogin);
 registerForm.addEventListener('submit', handleRegister);
@@ -864,14 +881,15 @@ adminReportDetails.addEventListener('click', async (event) => {
 });
 
 async function init() {
-  await loadServices();
   setAuthTab('login');
 
   try {
     const rememberedAt = Number(localStorage.getItem('rememberedAppOpenedAt') || 0);
     const canAutoLogin = rememberedAt && Date.now() - rememberedAt >= AUTO_LOGIN_DELAY_MS;
-    if (canAutoLogin) await loadCurrentUser();
-    await loadServices();
+    if (canAutoLogin) {
+      // loadCurrentUser() loads the service list itself once it confirms the session is valid.
+      await loadCurrentUser();
+    }
     render();
   } catch (error) {
     state.user = null;

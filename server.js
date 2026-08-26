@@ -13,14 +13,17 @@ const JWT_SECRET = process.env.JWT_SECRET || (IS_PRODUCTION ? '' : 'payogum-loca
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
   throw new Error('JWT_SECRET must be set and contain at least 32 characters.');
 }
-const AUTH_COOKIE = 'payogum_session';
-const CSRF_COOKIE = 'payogum_csrf';
+const AUTH_COOKIE = IS_PRODUCTION ? '__Host-payogum_session' : 'payogum_session';
+const CSRF_COOKIE = IS_PRODUCTION ? '__Host-payogum_csrf' : 'payogum_csrf';
 const SESSION_TTL = process.env.SESSION_TTL || '8h';
 const PUBLIC_PATH = path.join(__dirname, 'public');
 const DB_KEY = 'payogum-db';
 const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || '';
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || '';
 const PUSH_ENABLED = Boolean(VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY);
+if (IS_PRODUCTION && (VAPID_PUBLIC_KEY || VAPID_PRIVATE_KEY) && !PUSH_ENABLED) {
+  throw new Error('Production push configuration requires both VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY.');
+}
 
 if (PUSH_ENABLED) {
   webpush.setVapidDetails(
@@ -34,6 +37,9 @@ if (PUSH_ENABLED) {
 const fs = require('fs');
 const LOCAL_DB_PATH = path.join(__dirname, 'data', 'db.json');
 const useKv = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+if (IS_PRODUCTION && !useKv) {
+  throw new Error('Production requires KV_REST_API_URL and KV_REST_API_TOKEN. Local JSON storage is disabled in production.');
+}
 // Vercel KV (the native product) was sunset; Vercel's Storage tab now provisions Upstash Redis
 // via the Marketplace, but injects the same KV_REST_API_URL / KV_REST_API_TOKEN env var names.
 const kv = useKv
@@ -241,23 +247,44 @@ function requireCsrf(req, res, next) {
 }
 
 const rateBuckets = new Map();
+
+async function incrementRateCounter(key, windowMs) {
+  const now = Date.now();
+  if (useKv) {
+    const redisKey = `ratelimit:${key}`;
+    const count = await kv.incr(redisKey);
+    if (count === 1) await kv.expire(redisKey, Math.ceil(windowMs / 1000));
+    const ttl = await kv.ttl(redisKey);
+    return { count, resetAt: now + Math.max(1, ttl) * 1000 };
+  }
+
+  let bucket = rateBuckets.get(key);
+  if (!bucket || bucket.resetAt <= now) bucket = { count: 0, resetAt: now + windowMs };
+  bucket.count += 1;
+  rateBuckets.set(key, bucket);
+  if (rateBuckets.size > 5000) {
+    for (const [entryKey, entry] of rateBuckets) if (entry.resetAt <= now) rateBuckets.delete(entryKey);
+  }
+  return bucket;
+}
+
 function rateLimit({ windowMs, max, keyPrefix }) {
-  return (req, res, next) => {
-    const ip = String(req.ip || req.socket.remoteAddress || 'unknown').slice(0, 100);
-    const key = `${keyPrefix}:${ip}`;
-    const now = Date.now();
-    let bucket = rateBuckets.get(key);
-    if (!bucket || bucket.resetAt <= now) bucket = { count: 0, resetAt: now + windowMs };
-    bucket.count += 1;
-    rateBuckets.set(key, bucket);
-    if (rateBuckets.size > 5000) {
-      for (const [entryKey, entry] of rateBuckets) if (entry.resetAt <= now) rateBuckets.delete(entryKey);
+  return async (req, res, next) => {
+    try {
+      const ip = String(req.ip || req.socket.remoteAddress || 'unknown').slice(0, 100);
+      const key = `${keyPrefix}:${ip}`;
+      const bucket = await incrementRateCounter(key, windowMs);
+      if (bucket.count > max) {
+        res.setHeader('Retry-After', Math.max(1, Math.ceil((bucket.resetAt - Date.now()) / 1000)));
+        return res.status(429).json({ message: 'Çok fazla istek gönderildi. Lütfen daha sonra tekrar deneyin.' });
+      }
+      next();
+    } catch (error) {
+      console.error('Rate limit storage error:', error);
+      // Fail closed for security-sensitive endpoints when durable rate limiting is unavailable.
+      if (useKv) return res.status(503).json({ message: 'Güvenlik servisi geçici olarak kullanılamıyor.' });
+      next();
     }
-    if (bucket.count > max) {
-      res.setHeader('Retry-After', Math.ceil((bucket.resetAt - now) / 1000));
-      return res.status(429).json({ message: 'Çok fazla istek gönderildi. Lütfen daha sonra tekrar deneyin.' });
-    }
-    next();
   };
 }
 
@@ -366,6 +393,9 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'geolocation=(self), camera=(), microphone=()');
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
   res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'");
   if (IS_PRODUCTION) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
@@ -382,6 +412,12 @@ app.use((req, res, next) => {
 app.use(express.static(PUBLIC_PATH, { dotfiles: 'deny', index: 'index.html' }));
 
 // Make sure seed data exists before any API route runs.
+app.use('/api', rateLimit({ windowMs: 60 * 1000, max: 300, keyPrefix: 'api' }));
+app.use('/api', (_req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  next();
+});
+
 app.use('/api', async (_req, res, next) => {
   try {
     await ensureSeedDataOnce();
@@ -418,7 +454,7 @@ app.post('/api/register', rateLimit({ windowMs: 15 * 60 * 1000, max: 5, keyPrefi
     if (!/^\d{3,20}$/.test(normalizedSicilNo)) {
     return res.status(400).json({ message: 'Sicil no 3-20 rakamdan oluşmalıdır.' });
   }
-  const normalizedRole = 'personel';
+  const normalizedRole = role === 'driver' ? 'driver' : 'personel';
   if (String(password).length < 8 || String(password).length > 128) {
     return res.status(400).json({ message: 'Şifre 8-128 karakter arasında olmalıdır.' });
   }

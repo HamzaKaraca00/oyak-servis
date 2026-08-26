@@ -1,0 +1,906 @@
+{
+  "users": [
+    {
+      "id": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "name": "hamza k",
+      "phone": "05344788921",
+      "sicilNo": "09876789",
+      "passwordHash": "$2a$12$0oAuFYzvHvYQUPL3VKwmDuR/N7MfUNh889.iu2Q3M8PtmfUuOhrOm",
+      "role": "driver",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-26T11:32:30.959Z"
+    },
+    {
+      "id": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "name": "shamza k",
+      "phone": "05344588921",
+      "sicilNo": "09876721",
+      "passwordHash": "$2a$12$xgP85RggyKRWucXnBp1qSu93w8PaqVXT0jPnRdhiAtbBL2xXE9A/i",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-26T11:32:53.616Z"
+    }
+  ],
+  "services": [
+    {
+      "id": "service-01",
+      "code": "01",
+      "name": "01",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-02",
+      "code": "02",
+      "name": "02",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-03",
+      "code": "03",
+      "name": "03",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-04",
+      "code": "04",
+      "name": "04",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-05",
+      "code": "05",
+      "name": "05",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-06",
+      "code": "06",
+      "name": "06",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-07",
+      "code": "07",
+      "name": "07",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-08",
+      "code": "08",
+      "name": "08",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-09",
+      "code": "09",
+      "name": "09",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-10",
+      "code": "10",
+      "name": "10",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-11",
+      "code": "11",
+      "name": "11",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-12",
+      "code": "12",
+      "name": "12",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-13",
+      "code": "13",
+      "name": "13",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-14",
+      "code": "14",
+      "name": "14",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-15",
+      "code": "15",
+      "name": "15",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-16",
+      "code": "16",
+      "name": "16",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-17",
+      "code": "17",
+      "name": "17",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-18",
+      "code": "18",
+      "name": "18",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-19",
+      "code": "19",
+      "name": "19",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-20",
+      "code": "20",
+      "name": "20",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-21",
+      "code": "21",
+      "name": "21",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-22",
+      "code": "22",
+      "name": "22",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-23",
+      "code": "23",
+      "name": "23",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-24",
+      "code": "24",
+      "name": "24",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-25",
+      "code": "25",
+      "name": "25",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-26",
+      "code": "26",
+      "name": "26",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-27",
+      "code": "27",
+      "name": "27",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-28",
+      "code": "28",
+      "name": "28",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-29",
+      "code": "29",
+      "name": "29",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-30",
+      "code": "30",
+      "name": "30",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-31",
+      "code": "31",
+      "name": "31",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-32",
+      "code": "32",
+      "name": "32",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-33",
+      "code": "33",
+      "name": "33",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-34",
+      "code": "34",
+      "name": "34",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-35",
+      "code": "35",
+      "name": "35",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-36",
+      "code": "36",
+      "name": "36",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-37",
+      "code": "37",
+      "name": "37",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-38",
+      "code": "38",
+      "name": "38",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-39",
+      "code": "39",
+      "name": "39",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-40",
+      "code": "40",
+      "name": "40",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-41",
+      "code": "41",
+      "name": "41",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-42",
+      "code": "42",
+      "name": "42",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-43",
+      "code": "43",
+      "name": "43",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-44",
+      "code": "44",
+      "name": "44",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-45",
+      "code": "45",
+      "name": "45",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-46",
+      "code": "46",
+      "name": "46",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-47",
+      "code": "47",
+      "name": "47",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-48",
+      "code": "48",
+      "name": "48",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-49",
+      "code": "49",
+      "name": "49",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-50",
+      "code": "50",
+      "name": "50",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-51",
+      "code": "51",
+      "name": "51",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-52",
+      "code": "52",
+      "name": "52",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-53",
+      "code": "53",
+      "name": "53",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-54",
+      "code": "54",
+      "name": "54",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-55",
+      "code": "55",
+      "name": "55",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-56",
+      "code": "56",
+      "name": "56",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-57",
+      "code": "57",
+      "name": "57",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-58",
+      "code": "58",
+      "name": "58",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-59",
+      "code": "59",
+      "name": "59",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-60",
+      "code": "60",
+      "name": "60",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-61",
+      "code": "61",
+      "name": "61",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-62",
+      "code": "62",
+      "name": "62",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-63",
+      "code": "63",
+      "name": "63",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-64",
+      "code": "64",
+      "name": "64",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-65",
+      "code": "65",
+      "name": "65",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-66",
+      "code": "66",
+      "name": "66",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-67",
+      "code": "67",
+      "name": "67",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-68",
+      "code": "68",
+      "name": "68",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-69",
+      "code": "69",
+      "name": "69",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-70",
+      "code": "70",
+      "name": "70",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-71",
+      "code": "71",
+      "name": "71",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-72",
+      "code": "72",
+      "name": "72",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-73",
+      "code": "73",
+      "name": "73",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-74",
+      "code": "74",
+      "name": "74",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-75",
+      "code": "75",
+      "name": "75",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-76",
+      "code": "76",
+      "name": "76",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-77",
+      "code": "77",
+      "name": "77",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-78",
+      "code": "78",
+      "name": "78",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-79",
+      "code": "79",
+      "name": "79",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-80",
+      "code": "80",
+      "name": "80",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-81",
+      "code": "81",
+      "name": "81",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-82",
+      "code": "82",
+      "name": "82",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-83",
+      "code": "83",
+      "name": "83",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-84",
+      "code": "84",
+      "name": "84",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-85",
+      "code": "85",
+      "name": "85",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-86",
+      "code": "86",
+      "name": "86",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-87",
+      "code": "87",
+      "name": "87",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-88",
+      "code": "88",
+      "name": "88",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-89",
+      "code": "89",
+      "name": "89",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-90",
+      "code": "90",
+      "name": "90",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-91",
+      "code": "91",
+      "name": "91",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-92",
+      "code": "92",
+      "name": "92",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-93",
+      "code": "93",
+      "name": "93",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-94",
+      "code": "94",
+      "name": "94",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-95",
+      "code": "95",
+      "name": "95",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-96",
+      "code": "96",
+      "name": "96",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-97",
+      "code": "97",
+      "name": "97",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-98",
+      "code": "98",
+      "name": "98",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-99",
+      "code": "99",
+      "name": "99",
+      "route": "",
+      "createdAt": "2026-08-26T11:32:30.697Z"
+    }
+  ],
+  "logs": [
+    {
+      "id": "fd3e0a78-e6f0-49d3-a246-336085c16402",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958666",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.669Z"
+    },
+    {
+      "id": "32690795-7863-478e-96d2-62b0583fe11a",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958533",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.536Z"
+    },
+    {
+      "id": "0c680f95-3661-4263-bd3a-28e86e133703",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958400",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.403Z"
+    },
+    {
+      "id": "6c63346c-9c18-4119-a0a1-e5bc28fd9539",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958250",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.252Z"
+    },
+    {
+      "id": "c3c54aed-83a3-40a9-ae9d-42b6d01c5fad",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958100",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.103Z"
+    },
+    {
+      "id": "83150ead-307f-49f2-94ef-753532cf4e6c",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743957950",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:37.953Z"
+    },
+    {
+      "id": "c085da1e-a79a-476d-b0ac-8eab846b804e",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743957466",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:37.468Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "fd3e0a78-e6f0-49d3-a246-336085c16402",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958666",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.669Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.949Z"
+    },
+    {
+      "id": "32690795-7863-478e-96d2-62b0583fe11a",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958533",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.536Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.952Z"
+    },
+    {
+      "id": "0c680f95-3661-4263-bd3a-28e86e133703",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958400",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.403Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.951Z"
+    },
+    {
+      "id": "6c63346c-9c18-4119-a0a1-e5bc28fd9539",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958250",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.252Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.950Z"
+    },
+    {
+      "id": "c3c54aed-83a3-40a9-ae9d-42b6d01c5fad",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743958100",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:38.103Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.950Z"
+    },
+    {
+      "id": "83150ead-307f-49f2-94ef-753532cf4e6c",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743957950",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:37.953Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.948Z"
+    },
+    {
+      "id": "c085da1e-a79a-476d-b0ac-8eab846b804e",
+      "serviceId": "service-01",
+      "type": "departure_10",
+      "label": "Kalkışa 10 dakika kaldı",
+      "message": "🚌 Kalkışa 10 dakika kaldı.",
+      "senderName": "hamza k",
+      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
+      "idempotencyKey": "service-01:departure_10:1787743957466",
+      "coordinates": null,
+      "createdAt": "2026-08-26T11:32:37.468Z",
+      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
+      "readAt": "2026-08-26T11:32:54.947Z"
+    }
+  ],
+  "pushSubscriptions": []
+}
