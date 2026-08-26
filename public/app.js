@@ -293,7 +293,7 @@ function getCookie(name) {
 
 function authHeaders(extra = {}) {
   const headers = { 'Content-Type': 'application/json', ...extra };
-  // Try both development and production cookie names
+  // Try both cookie names to handle environment switching
   const csrfToken = getCookie('payogum_csrf') || getCookie('__Host-payogum_csrf');
   if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
   return headers;

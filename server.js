@@ -237,7 +237,9 @@ function validateCsrf(req) {
   if (getBearerToken(req)) return true;
   const cookies = parseCookies(req);
   const header = req.headers['x-csrf-token'];
-  return Boolean(cookies[CSRF_COOKIE] && header && cookies[CSRF_COOKIE] === header);
+  // Accept both cookie names to handle environment switching
+  const csrfToken = cookies[CSRF_COOKIE] || cookies[IS_PRODUCTION ? 'payogum_csrf' : '__Host-payogum_csrf'];
+  return Boolean(csrfToken && header && csrfToken === header);
 }
 
 function requireCsrf(req, res, next) {
