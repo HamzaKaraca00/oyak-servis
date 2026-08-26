@@ -32,14 +32,3 @@ Bu proje kişisel veri işlediği için production'a alınmadan önce teknik kon
 ## Hukuki kapsam
 
 Bu teknik kontroller tek başına uygulamanın "KVKK uyumlu" olduğunu göstermez. Veri işleme amaçları, hukuki sebepler, saklama süreleri, aktarım/yurt dışı aktarım süreçleri, ilgili kişi başvuruları ve gerekli aydınlatma/rıza metinleri gerçek işletme süreçlerine göre belirlenmeli ve doğrulanmalıdır.
-
-
-## Production hardening applied
-
-- Production deployments require Upstash Redis (`KV_REST_API_URL` and `KV_REST_API_TOKEN`); the local JSON database is disabled when `NODE_ENV=production`.
-- Rate limiting uses Upstash Redis in production so limits are shared across serverless instances.
-- API responses are marked `Cache-Control: no-store`.
-- Production authentication cookies use the `__Host-` prefix, `Secure`, `HttpOnly`, and `SameSite=Lax`.
-- Security headers include CSP, HSTS (production), COOP, CORP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, and X-Permitted-Cross-Domain-Policies.
-- A global API rate limit is applied in addition to stricter login/register limits.
-- Never commit `.env`, Redis tokens, JWT secrets, or VAPID private keys. Use the hosting provider's encrypted environment variables.

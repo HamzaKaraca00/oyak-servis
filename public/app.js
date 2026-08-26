@@ -12,8 +12,6 @@ const authTabs = document.querySelectorAll('.tab-button');
 const authForms = document.querySelectorAll('.auth-form');
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
-const registerRoleInput = document.getElementById('registerRole');
-const roleTabButtons = document.querySelectorAll('.role-tab-button');
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const serviceSelect = document.getElementById('serviceSelect');
 const serviceOptionList = document.getElementById('serviceOptionList');
@@ -612,8 +610,7 @@ async function handleRegister(event) {
     name: formData.get('name'),
     phone: formData.get('phone'),
     sicilNo: formData.get('sicilNo'),
-    password: formData.get('password'),
-    role: formData.get('role') || 'personel'
+    password: formData.get('password')
   };
 
   try {
@@ -649,18 +646,6 @@ async function joinSelectedService() {
     render();
   }, 'Bağlandı');
 }
-
-roleTabButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    roleTabButtons.forEach((btn) => {
-      btn.classList.remove('active');
-      btn.setAttribute('aria-pressed', 'false');
-    });
-    button.classList.add('active');
-    button.setAttribute('aria-pressed', 'true');
-    registerRoleInput.value = button.dataset.role;
-  });
-});
 
 loginForm.addEventListener('submit', handleLogin);
 registerForm.addEventListener('submit', handleRegister);
