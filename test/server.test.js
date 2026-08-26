@@ -4,6 +4,13 @@ const { spawn } = require('node:child_process');
 const path = require('node:path');
 
 const serverPath = path.join(__dirname, '..', 'server.js');
+const TEST_ADMIN_SICIL = '0001';
+const TEST_ADMIN_PASSWORD = 'test-admin-bootstrap-password-2026';
+const TEST_SERVER_ENV = {
+  ADMIN_INITIAL_SICIL: TEST_ADMIN_SICIL,
+  ADMIN_INITIAL_PASSWORD: TEST_ADMIN_PASSWORD,
+  ADMIN_INITIAL_NAME: 'Test Admin'
+};
 
 async function waitForHealth(port) {
   const deadline = Date.now() + 10000;
@@ -50,6 +57,20 @@ async function login(port, sicilNo, password) {
   return { response, data, cookie: `payogum_session=${session}; payogum_csrf=${csrf}`, csrf };
 }
 
+async function register(port, { name, phone, sicilNo, password, role }) {
+  const initial = await getCsrf(port);
+  const response = await fetch(`http://localhost:${port}/api/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: initial.cookie, 'X-CSRF-Token': initial.csrf },
+    body: JSON.stringify({ name, phone, sicilNo, password, role })
+  });
+  const data = await response.json();
+  const setCookie = response.headers.get('set-cookie') || '';
+  const session = cookieValue(setCookie, 'payogum_session');
+  const csrf = cookieValue(setCookie, 'payogum_csrf') || initial.csrf;
+  return { response, data, cookie: `payogum_session=${session}; payogum_csrf=${csrf}`, csrf };
+}
+
 function authHeaders(session, csrf, extra = {}) {
   return { Authorization: '', Cookie: session, 'X-CSRF-Token': csrf, ...extra };
 }
@@ -58,7 +79,7 @@ test('health endpoint responds successfully', async () => {
   const port = 3456 + Math.floor(Math.random() * 1000);
   const child = spawn(process.execPath, [serverPath], {
     cwd: path.join(__dirname, '..'),
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
@@ -76,14 +97,14 @@ test('admin can update and delete service entries', async () => {
   const port = 3556 + Math.floor(Math.random() * 1000);
   const child = spawn(process.execPath, [serverPath], {
     cwd: path.join(__dirname, '..'),
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
   try {
     await waitForHealth(port);
 
-    const admin = await login(port, '0001', 'admin123');
+    const admin = await login(port, TEST_ADMIN_SICIL, TEST_ADMIN_PASSWORD);
     assert.equal(admin.response.status, 200);
 
     const listResponse = await fetch(`http://localhost:${port}/api/services`, {
@@ -122,14 +143,14 @@ test('users only receive notifications for their own service', async () => {
   const port = 3656 + Math.floor(Math.random() * 1000);
   const child = spawn(process.execPath, [serverPath], {
     cwd: path.join(__dirname, '..'),
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
   try {
     await waitForHealth(port);
 
-    const admin = await login(port, '0001', 'admin123');
+    const admin = await login(port, TEST_ADMIN_SICIL, TEST_ADMIN_PASSWORD);
     assert.equal(admin.response.status, 200);
 
     const since = new Date(Date.now() - 1000).toISOString();
@@ -174,7 +195,7 @@ test('offline staff can retrieve persistent unread notifications after login', a
   const port = 4756 + Math.floor(Math.random() * 1000);
   const child = spawn(process.execPath, [serverPath], {
     cwd: path.join(__dirname, '..'),
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
@@ -201,7 +222,7 @@ test('offline staff can retrieve persistent unread notifications after login', a
     });
     assert.equal(joinResponse.status, 200);
 
-    const admin = await login(port, '0001', 'admin123');
+    const admin = await login(port, TEST_ADMIN_SICIL, TEST_ADMIN_PASSWORD);
     const notifyResponse = await fetch(`http://localhost:${port}/api/notify`, {
       method: 'POST',
       headers: authHeaders(admin.cookie, admin.csrf, { 'Content-Type': 'application/json' }),
@@ -222,6 +243,227 @@ test('offline staff can retrieve persistent unread notifications after login', a
     assert.equal(unreadResponse.status, 200);
     assert.equal(unread.at(-1).message, '🚌 Sürücü kalkışı gerçekleştirdi.');
     assert.equal(unread.at(-1).userId, staff.user.id);
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: public registration cannot self-assign the admin role', async () => {
+  const port = 4856 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const uniquePhone = `05${String(Date.now()).slice(-9)}`;
+    const result = await register(port, {
+      name: 'Sneaky User',
+      phone: uniquePhone,
+      sicilNo: String(Date.now()).slice(-10),
+      password: 'secret12345',
+      role: 'admin' // attempted privilege escalation
+    });
+    assert.equal(result.response.status, 201);
+    assert.equal(result.data.user.role, 'personel', 'role must never be admin from public registration');
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: a user cannot read another service\'s notification history (IDOR)', async () => {
+  const port = 4956 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const uniquePhone = `05${String(Date.now()).slice(-9)}`;
+    const staff = await register(port, {
+      name: 'Service01 Member',
+      phone: uniquePhone,
+      sicilNo: String(Date.now()).slice(-10),
+      password: 'secret12345'
+    });
+
+    await fetch(`http://localhost:${port}/api/join-service`, {
+      method: 'POST',
+      headers: authHeaders(staff.cookie, staff.csrf, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ serviceId: 'service-01' })
+    });
+
+    const leakAttempt = await fetch(`http://localhost:${port}/api/services/service-02/notifications`, {
+      headers: authHeaders(staff.cookie, staff.csrf)
+    });
+    assert.equal(leakAttempt.status, 403);
+
+    const ownService = await fetch(`http://localhost:${port}/api/services/service-01/notifications`, {
+      headers: authHeaders(staff.cookie, staff.csrf)
+    });
+    assert.equal(ownService.status, 200);
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: a user cannot send notifications for a service they are not a member of', async () => {
+  const port = 5056 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const uniquePhone = `05${String(Date.now()).slice(-9)}`;
+    const driver = await register(port, {
+      name: 'Service01 Driver',
+      phone: uniquePhone,
+      sicilNo: String(Date.now()).slice(-10),
+      password: 'secret12345',
+      role: 'driver'
+    });
+
+    await fetch(`http://localhost:${port}/api/join-service`, {
+      method: 'POST',
+      headers: authHeaders(driver.cookie, driver.csrf, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ serviceId: 'service-01' })
+    });
+
+    const spamAttempt = await fetch(`http://localhost:${port}/api/notify`, {
+      method: 'POST',
+      headers: authHeaders(driver.cookie, driver.csrf, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ serviceId: 'service-02', type: 'arrived', label: 'Sahte bildirim', message: 'spam' })
+    });
+    assert.equal(spamAttempt.status, 403);
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: personnel cannot send driver-only notification types', async () => {
+  const port = 5156 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const uniquePhone = `05${String(Date.now()).slice(-9)}`;
+    const staff = await register(port, {
+      name: 'Personnel Spoof Attempt',
+      phone: uniquePhone,
+      sicilNo: String(Date.now()).slice(-10),
+      password: 'secret12345'
+    });
+
+    await fetch(`http://localhost:${port}/api/join-service`, {
+      method: 'POST',
+      headers: authHeaders(staff.cookie, staff.csrf, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ serviceId: 'service-01' })
+    });
+
+    const spoofAttempt = await fetch(`http://localhost:${port}/api/notify`, {
+      method: 'POST',
+      headers: authHeaders(staff.cookie, staff.csrf, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ serviceId: 'service-01', type: 'arrived', label: 'Sahte varış', message: 'spoofed' })
+    });
+    assert.equal(spoofAttempt.status, 403);
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: state-changing requests are rejected without a valid CSRF token', async () => {
+  const port = 5256 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const admin = await login(port, TEST_ADMIN_SICIL, TEST_ADMIN_PASSWORD);
+
+    // Valid session cookie, but NO X-CSRF-Token header — simulates a cross-site forged request.
+    const forged = await fetch(`http://localhost:${port}/api/services`, {
+      method: 'POST',
+      headers: { Cookie: admin.cookie, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: '55' })
+    });
+    assert.equal(forged.status, 403);
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: session cookie is HttpOnly and not exposed to JavaScript', async () => {
+  const port = 5356 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const initial = await getCsrf(port);
+    const response = await fetch(`http://localhost:${port}/api/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: initial.cookie, 'X-CSRF-Token': initial.csrf },
+      body: JSON.stringify({ sicilNo: TEST_ADMIN_SICIL, password: TEST_ADMIN_PASSWORD })
+    });
+    const setCookie = response.headers.get('set-cookie') || '';
+    const sessionCookiePart = setCookie.split(/, (?=[^;]+?=)/).find((part) => part.includes('payogum_session='));
+    assert.ok(sessionCookiePart, 'session cookie should be set on login');
+    assert.match(sessionCookiePart, /HttpOnly/i);
+
+    // The login response body must never contain the raw token (it lives only in the HttpOnly cookie).
+    const data = await response.json();
+    assert.equal(data.token, undefined);
+    assert.equal(data.user.passwordHash, undefined);
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+});
+
+test('SECURITY: login is rate-limited after repeated failed attempts', async () => {
+  const port = 5456 + Math.floor(Math.random() * 1000);
+  const child = spawn(process.execPath, [serverPath], {
+    cwd: path.join(__dirname, '..'),
+    env: { ...process.env, ...TEST_SERVER_ENV, PORT: String(port) },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
+
+  try {
+    await waitForHealth(port);
+    const initial = await getCsrf(port);
+    let lastStatus = null;
+    for (let i = 0; i < 11; i += 1) {
+      const attempt = await fetch(`http://localhost:${port}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Cookie: initial.cookie, 'X-CSRF-Token': initial.csrf },
+        body: JSON.stringify({ sicilNo: TEST_ADMIN_SICIL, password: 'wrong-password' })
+      });
+      lastStatus = attempt.status;
+    }
+    assert.equal(lastStatus, 429, 'repeated failed logins from the same IP should eventually be rate-limited');
   } finally {
     child.kill('SIGTERM');
     await new Promise((resolve) => setTimeout(resolve, 300));

@@ -369,6 +369,7 @@ async function loadCurrentUser() {
   try {
     const user = await fetchJson('/api/me');
     state.user = user;
+    await loadServices();
     state.selectedServiceId = user.serviceId || state.selectedServiceId;
     renderServiceOptions();
     if (state.selectedServiceId) {
@@ -879,14 +880,15 @@ adminReportDetails.addEventListener('click', async (event) => {
 });
 
 async function init() {
-  await loadServices();
   setAuthTab('login');
 
   try {
     const rememberedAt = Number(localStorage.getItem('rememberedAppOpenedAt') || 0);
     const canAutoLogin = rememberedAt && Date.now() - rememberedAt >= AUTO_LOGIN_DELAY_MS;
-    if (canAutoLogin) await loadCurrentUser();
-    await loadServices();
+    if (canAutoLogin) {
+      // loadCurrentUser() loads the service list itself once it confirms the session is valid.
+      await loadCurrentUser();
+    }
     render();
   } catch (error) {
     state.user = null;
