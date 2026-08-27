@@ -1,34 +1,177 @@
 {
   "users": [
     {
-      "id": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "name": "hamza k",
-      "phone": "05344788921",
-      "sicilNo": "09876789",
-      "passwordHash": "$2a$12$0oAuFYzvHvYQUPL3VKwmDuR/N7MfUNh889.iu2Q3M8PtmfUuOhrOm",
-      "role": "driver",
-      "serviceId": "service-01",
-      "createdAt": "2026-08-26T11:32:30.959Z"
+      "id": "8fc623ef-fdac-4de3-af12-595c28e5da2c",
+      "name": "Admin",
+      "phone": "admin",
+      "sicilNo": "0001",
+      "passwordHash": "$2a$12$zkYFUcRq34QjRlbOUMiMfOjfi7syjI8oBfhAo/vNQRELFHiq94mXS",
+      "role": "admin",
+      "serviceId": null,
+      "createdAt": "2026-08-26T18:33:58.664Z"
     },
     {
-      "id": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "name": "shamza k",
-      "phone": "05344588921",
-      "sicilNo": "09876721",
-      "passwordHash": "$2a$12$xgP85RggyKRWucXnBp1qSu93w8PaqVXT0jPnRdhiAtbBL2xXE9A/i",
+      "id": "b7d9dee9-ea10-4159-987b-2cf8b7a42fd7",
+      "name": "Sneaky User",
+      "phone": "05857867069",
+      "sicilNo": "7857867069",
+      "passwordHash": "$2a$12$pEnde.FwQQ32hM2igZfhJeM6q41hj8q2/4d4LquIZJcP66rYs4Jpe",
+      "role": "personel",
+      "serviceId": null,
+      "createdAt": "2026-08-27T19:11:07.346Z"
+    },
+    {
+      "id": "92fbd1bf-9287-44a3-b568-471599388318",
+      "name": "Personnel Spoof Attempt",
+      "phone": "05857871678",
+      "sicilNo": "7857871678",
+      "passwordHash": "$2a$12$USdghceCzWlzeOrZixaBPuRMPg1PSxCuQ.qnbbirxQqq185DXkIrC",
       "role": "personel",
       "serviceId": "service-01",
-      "createdAt": "2026-08-26T11:32:53.616Z"
+      "createdAt": "2026-08-27T19:11:11.961Z"
+    },
+    {
+      "id": "baeef539-8c43-46d4-ba19-eaeb6b1f0003",
+      "name": "Offline Personel",
+      "phone": "05857904851",
+      "sicilNo": "7857904853",
+      "passwordHash": "$2a$12$CGzlHJgdPY9pKmecc/93luLwgVuWm6LCGqHBV4WGNzm5ZthyU/YjS",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:11:45.131Z"
+    },
+    {
+      "id": "7876195e-2b29-436d-80a9-eaca879b7fbb",
+      "name": "Sneaky User",
+      "phone": "05857906681",
+      "sicilNo": "7857906681",
+      "passwordHash": "$2a$12$.cM2BIxYdpvbT/uaXiFqHOb7dXV.5RkXjRk23A7inouOpiozL0OzS",
+      "role": "personel",
+      "serviceId": null,
+      "createdAt": "2026-08-27T19:11:46.962Z"
+    },
+    {
+      "id": "bdf31999-391b-4e16-9744-a3815d36eccf",
+      "name": "Service01 Member",
+      "phone": "05857908196",
+      "sicilNo": "7857908196",
+      "passwordHash": "$2a$12$iftAUCrC7zWt2NituSDRhOTjVA/ysIOcderWySDhKmFEtcruxb6JO",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:11:48.476Z"
+    },
+    {
+      "id": "086be7d8-8263-4584-b9d9-dc7e3f42d596",
+      "name": "Service01 Driver",
+      "phone": "05857909767",
+      "sicilNo": "7857909767",
+      "passwordHash": "$2a$12$Fm3Fuc0CSh8ZSvK2Bymr2esDc5AtxlMdt/xILuJrh0bwC1xCovpum",
+      "role": "driver",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:11:50.058Z"
+    },
+    {
+      "id": "151d8eb8-3ac6-4cc9-ba44-e67e81e87ebf",
+      "name": "Personnel Spoof Attempt",
+      "phone": "05857911333",
+      "sicilNo": "7857911333",
+      "passwordHash": "$2a$12$CV8HI0iDcS0WKlIB3p6GZe/PEAonYwErv5uTdPvsnEZ69eIPM1agG",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:11:51.630Z"
+    },
+    {
+      "id": "9ad99dfa-3d6e-429b-a3d6-0a1db3616c5c",
+      "name": "Offline Personel",
+      "phone": "05858399260",
+      "sicilNo": "7858399262",
+      "passwordHash": "$2a$12$7JhEEbvuS4SPx/wXo0iPCui9zZPnz1cayXNEBGGW.N43ulbJwFEXe",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:19:59.557Z"
+    },
+    {
+      "id": "a338a4b9-8db2-42f9-bd47-7dedb4f526c0",
+      "name": "Sneaky User",
+      "phone": "05858401139",
+      "sicilNo": "7858401139",
+      "passwordHash": "$2a$12$b60svwUK6/iCCw/XxEvKzumu3xDBJoZV8uuy2k/kZcnm2A5D/fi76",
+      "role": "personel",
+      "serviceId": null,
+      "createdAt": "2026-08-27T19:20:01.419Z"
+    },
+    {
+      "id": "6d742553-a5a2-4c84-9df0-05d8c4377207",
+      "name": "Service01 Member",
+      "phone": "05858402687",
+      "sicilNo": "7858402687",
+      "passwordHash": "$2a$12$HZq2xEjcmd9yioCCoUv8WuMU.qAKv8IfMKP5Nfq96lg7K/tgF24zu",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:20:02.970Z"
+    },
+    {
+      "id": "9983e9cd-6657-40d3-949f-60ed699131a6",
+      "name": "Service01 Driver",
+      "phone": "05858404266",
+      "sicilNo": "7858404266",
+      "passwordHash": "$2a$12$obN8F3yV2.YJ/mwqe26Bxu5FkNHMwmWwnUq0lYLvpIKEHc62RJzz6",
+      "role": "driver",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:20:04.547Z"
+    },
+    {
+      "id": "db9b797d-a324-4ffb-a8f7-81c3ba72ff9c",
+      "name": "Personnel Spoof Attempt",
+      "phone": "05858405833",
+      "sicilNo": "7858405833",
+      "passwordHash": "$2a$12$nqr4YdsdW3SUv0ItmI6rzOVsj9VDukmqPiR7YV0olEYUDiDdpB0/6",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:20:06.121Z"
+    },
+    {
+      "id": "a4135d38-c91e-4382-ad55-2926ba8bd33a",
+      "name": "Offline Personel",
+      "phone": "05858569018",
+      "sicilNo": "7858569021",
+      "passwordHash": "$2a$12$hz2LfRywi96iZRSC0GZwsu5HYbfX04QA.CAFfS0pgib9cwbUjGeYa",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:22:49.301Z"
+    },
+    {
+      "id": "fef3f565-6dc9-43fc-a969-20dbf348ef0d",
+      "name": "Sneaky User",
+      "phone": "05858570858",
+      "sicilNo": "7858570858",
+      "passwordHash": "$2a$12$2CJRvRO05rx3Az/PU6g7NePovF4qjhljAjKCOwHECbDhWPwxT5mSK",
+      "role": "personel",
+      "serviceId": null,
+      "createdAt": "2026-08-27T19:22:51.141Z"
+    },
+    {
+      "id": "a8437c38-3179-47bb-841e-83487b11c809",
+      "name": "Service01 Member",
+      "phone": "05858572388",
+      "sicilNo": "7858572388",
+      "passwordHash": "$2a$12$FzKN9ED8H3Tz76m4QbjSF.A26vfEwpzX6jkZCefGH4xB50aDb1EvC",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:22:52.668Z"
+    },
+    {
+      "id": "0fa0979c-c6d3-478a-9034-c40bc14e700c",
+      "name": "Personnel Spoof Attempt",
+      "phone": "05858584307",
+      "sicilNo": "7858584307",
+      "passwordHash": "$2a$12$MiPX87Jsg.FbVAKY.Bv/vevx7C9Vlp3TurMJxpLKIWgx9vIUQ8Vqy",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-08-27T19:23:04.591Z"
     }
   ],
   "services": [
-    {
-      "id": "service-01",
-      "code": "01",
-      "name": "01",
-      "route": "",
-      "createdAt": "2026-08-26T11:32:30.697Z"
-    },
     {
       "id": "service-02",
       "code": "02",
@@ -61,13 +204,6 @@
       "id": "service-06",
       "code": "06",
       "name": "06",
-      "route": "",
-      "createdAt": "2026-08-26T11:32:30.697Z"
-    },
-    {
-      "id": "service-07",
-      "code": "07",
-      "name": "07",
       "route": "",
       "createdAt": "2026-08-26T11:32:30.697Z"
     },
@@ -714,193 +850,23 @@
       "name": "99",
       "route": "",
       "createdAt": "2026-08-26T11:32:30.697Z"
+    },
+    {
+      "id": "service-07",
+      "code": "07",
+      "name": "07",
+      "route": "",
+      "createdAt": "2026-08-27T19:22:47.172Z"
+    },
+    {
+      "id": "46800fb8-8e66-43af-8044-970b0884ac2f",
+      "name": "01",
+      "code": "01",
+      "route": "",
+      "createdAt": "2026-08-27T19:30:15.604Z"
     }
   ],
-  "logs": [
-    {
-      "id": "fd3e0a78-e6f0-49d3-a246-336085c16402",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958666",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.669Z"
-    },
-    {
-      "id": "32690795-7863-478e-96d2-62b0583fe11a",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958533",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.536Z"
-    },
-    {
-      "id": "0c680f95-3661-4263-bd3a-28e86e133703",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958400",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.403Z"
-    },
-    {
-      "id": "6c63346c-9c18-4119-a0a1-e5bc28fd9539",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958250",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.252Z"
-    },
-    {
-      "id": "c3c54aed-83a3-40a9-ae9d-42b6d01c5fad",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958100",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.103Z"
-    },
-    {
-      "id": "83150ead-307f-49f2-94ef-753532cf4e6c",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743957950",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:37.953Z"
-    },
-    {
-      "id": "c085da1e-a79a-476d-b0ac-8eab846b804e",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743957466",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:37.468Z"
-    }
-  ],
-  "notifications": [
-    {
-      "id": "fd3e0a78-e6f0-49d3-a246-336085c16402",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958666",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.669Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.949Z"
-    },
-    {
-      "id": "32690795-7863-478e-96d2-62b0583fe11a",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958533",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.536Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.952Z"
-    },
-    {
-      "id": "0c680f95-3661-4263-bd3a-28e86e133703",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958400",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.403Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.951Z"
-    },
-    {
-      "id": "6c63346c-9c18-4119-a0a1-e5bc28fd9539",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958250",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.252Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.950Z"
-    },
-    {
-      "id": "c3c54aed-83a3-40a9-ae9d-42b6d01c5fad",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743958100",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:38.103Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.950Z"
-    },
-    {
-      "id": "83150ead-307f-49f2-94ef-753532cf4e6c",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743957950",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:37.953Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.948Z"
-    },
-    {
-      "id": "c085da1e-a79a-476d-b0ac-8eab846b804e",
-      "serviceId": "service-01",
-      "type": "departure_10",
-      "label": "Kalkışa 10 dakika kaldı",
-      "message": "🚌 Kalkışa 10 dakika kaldı.",
-      "senderName": "hamza k",
-      "senderId": "06544b33-1744-49a0-be43-2cef95d0778c",
-      "idempotencyKey": "service-01:departure_10:1787743957466",
-      "coordinates": null,
-      "createdAt": "2026-08-26T11:32:37.468Z",
-      "userId": "bfe22e05-2577-42c6-a4d5-227d1ac327d1",
-      "readAt": "2026-08-26T11:32:54.947Z"
-    }
-  ],
+  "logs": [],
+  "notifications": [],
   "pushSubscriptions": []
 }

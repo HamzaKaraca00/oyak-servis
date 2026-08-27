@@ -8,6 +8,27 @@ const state = {
   notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false'
 };
 
+const globalLoading = document.getElementById('globalLoading');
+let loadingStartedAt = Date.now();
+let loadingHideTimer = null;
+
+function showGlobalLoading() {
+  if (loadingHideTimer) window.clearTimeout(loadingHideTimer);
+  loadingStartedAt = Date.now();
+  globalLoading.classList.remove('is-hidden');
+  globalLoading.setAttribute('aria-busy', 'true');
+}
+
+function hideGlobalLoading() {
+  const remaining = Math.max(0, 1200 - (Date.now() - loadingStartedAt));
+  loadingHideTimer = window.setTimeout(() => {
+    globalLoading.classList.add('is-hidden');
+    globalLoading.setAttribute('aria-busy', 'false');
+  }, remaining);
+}
+
+showGlobalLoading();
+
 const authTabs = document.querySelectorAll('.tab-button');
 const authForms = document.querySelectorAll('.auth-form');
 const loginForm = document.getElementById('loginForm');
@@ -15,6 +36,7 @@ const registerForm = document.getElementById('registerForm');
 const registerRoleInput = document.getElementById('registerRole');
 const roleTabButtons = document.querySelectorAll('.role-tab-button');
 const adminLoginBtn = document.getElementById('adminLoginBtn');
+const servicePanel = document.getElementById('servicePanel');
 const serviceSelect = document.getElementById('serviceSelect');
 const serviceOptionList = document.getElementById('serviceOptionList');
 const joinServiceBtn = document.getElementById('joinServiceBtn');
@@ -41,6 +63,14 @@ let adminReports = [];
 const serviceAdminList = document.getElementById('serviceAdminList');
 const serviceCodeInput = document.getElementById('serviceCodeInput');
 const addServiceBtn = document.getElementById('addServiceBtn');
+const adminMessageForm = document.getElementById('adminMessageForm');
+const adminMessageTarget = document.getElementById('adminMessageTarget');
+const adminMessageSendBtn = document.getElementById('adminMessageSendBtn');
+const adminCleanupBtn = document.getElementById('adminCleanupBtn');
+const memberEditModal = document.getElementById('memberEditModal');
+const memberEditForm = document.getElementById('memberEditForm');
+const memberEditSaveBtn = document.getElementById('memberEditSaveBtn');
+const toastContainer = document.getElementById('toastContainer');
 const shareLocationBtn = document.getElementById('shareLocationBtn');
 const requestLocationBtn = document.getElementById('requestLocationBtn');
 const driverStatusBox = document.getElementById('driverStatusBox');
@@ -233,11 +263,20 @@ function setActionFeedback(button, message, kind) {
   button.classList.add(kind === 'success' ? 'is-success' : 'is-error');
   button.dataset.feedback = button.textContent;
   button.textContent = kind === 'success' ? '✓ Gönderildi' : 'Tekrar Dene';
-  driverStatusBox.textContent = message;
+  if (driverStatusBox) driverStatusBox.textContent = message;
+  showToast(message, kind === 'success' ? 'success' : 'error');
   window.setTimeout(() => {
     button.classList.remove('is-success', 'is-error');
     button.textContent = button.dataset.feedback;
   }, 1600);
+}
+
+function showToast(message, kind = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast ${kind}`;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+  window.setTimeout(() => toast.remove(), 3600);
 }
 
 async function runAdminAction(button, action, successText, afterSuccess) {
@@ -250,6 +289,7 @@ async function runAdminAction(button, action, successText, afterSuccess) {
     button.classList.remove('is-loading');
     button.classList.add('is-success');
     button.textContent = `✓ ${successText}`;
+    showToast(`${successText} başarılı.`);
     window.setTimeout(() => {
       if (afterSuccess) Promise.resolve(afterSuccess()).catch(() => {});
       button.classList.remove('is-success');
@@ -260,7 +300,7 @@ async function runAdminAction(button, action, successText, afterSuccess) {
     button.classList.remove('is-loading');
     button.classList.add('is-error');
     button.textContent = 'Tekrar Dene';
-    window.alert(error.message || 'İşlem başarısız.');
+    showToast(error.message || 'İşlem başarısız.', 'error');
     window.setTimeout(() => {
       button.classList.remove('is-error');
       button.textContent = defaultText;
@@ -281,8 +321,10 @@ authTabs.forEach((tab) => {
 });
 
 adminLoginBtn.addEventListener('click', () => {
+  showGlobalLoading();
   setAuthTab('login');
   loginForm.elements.sicilNo.focus();
+  hideGlobalLoading();
 });
 
 function getCookie(name) {
@@ -427,6 +469,8 @@ async function loadAdminServices() {
         </div>
       </li>
     `).join('');
+    adminMessageTarget.innerHTML = '<option value="all">Tüm servisler</option>' +
+      services.map((service) => `<option value="${escapeHtml(service.id)}">Servis ${escapeHtml(service.code)}</option>`).join('');
   } catch (error) {
     serviceAdminList.innerHTML = '<li>Servis listesi yüklenemedi.</li>';
   }
@@ -455,6 +499,10 @@ function renderAdminReports() {
         <span>${escapeHtml(report.notificationCount)} bildirim</span>
         <button class="report-detail-btn" data-detail="unread" data-service-id="${escapeHtml(report.serviceId)}">${escapeHtml(report.unreadCount)} okunmamış</button>
         <button class="report-detail-btn" data-detail="members" data-service-id="${escapeHtml(report.serviceId)}">${escapeHtml(report.memberCount)} üye</button>
+        <div class="export-btn-container">
+          <button class="export-btn excel-btn" data-export="excel" data-service-id="${escapeHtml(report.serviceId)}" data-service-code="${escapeHtml(report.serviceCode)}">Excel Olarak İndir</button>
+          <button class="export-btn pdf-btn" data-export="pdf" data-service-id="${escapeHtml(report.serviceId)}" data-service-code="${escapeHtml(report.serviceCode)}">PDF Olarak İndir</button>
+        </div>
         <small>${report.lastNotificationAt ? escapeHtml(new Date(report.lastNotificationAt).toLocaleString('tr-TR')) : 'Henüz bildirim yok'}</small>
       </div>
     `).join('') : '<p>Seçilen servis için rapor bulunamadı.</p>';
@@ -466,10 +514,10 @@ async function loadAdminReportDetails(serviceId, detailType) {
     adminReportDetails.dataset.serviceId = serviceId;
     const content = detailType === 'members'
       ? `<h5>Servis ${escapeHtml(result.service.code)} personelleri</h5>${result.members.length
-        ? `<ul>${result.members.map((member) => `<li><strong>${escapeHtml(member.phone)}</strong><span>${escapeHtml(member.name)}</span></li>`).join('')}</ul>`
+        ? `<ul>${result.members.map((member) => `<li><div><strong>${escapeHtml(member.phone)}</strong><span>${escapeHtml(member.name)} • ${escapeHtml(member.role)} • Sicil: ${escapeHtml(member.sicilNo || '-')}</span></div><div class="member-actions"><button class="member-edit-btn" data-user-id="${escapeHtml(member.id)}" data-name="${escapeHtml(member.name)}" data-phone="${escapeHtml(member.phone)}" data-sicil-no="${escapeHtml(member.sicilNo || '')}" data-role="${escapeHtml(member.role)}" data-service-id="${escapeHtml(member.serviceId || '')}">Düzenle</button><button class="member-delete-btn" data-user-id="${escapeHtml(member.id)}">Sil</button></div></li>`).join('')}</ul>`
         : '<p>Bu servise bağlı personel yok.</p>'}`
       : `<h5>Okunmamış mesajlar</h5>${result.unreadNotifications.length
-        ? `<ul>${result.unreadNotifications.map((entry) => `<li><div><strong>${escapeHtml(entry.label)}</strong><p>${escapeHtml(entry.message)}</p><small>${escapeHtml(new Date(entry.createdAt).toLocaleString('tr-TR'))}</small></div><button class="mark-admin-read" data-notification-id="${escapeHtml(entry.id)}">Okundu</button></li>`).join('')}</ul>`
+        ? `<ul>${result.unreadNotifications.map((entry) => `<li><div><strong>${escapeHtml(entry.label)}</strong><p>${escapeHtml(entry.message)}</p><small>${escapeHtml(new Date(entry.createdAt).toLocaleString('tr-TR'))}</small></div></li>`).join('')}</ul>`
         : '<p>Okunmamış mesaj yok.</p>'}`;
     adminReportDetails.innerHTML = content;
     adminReportDetails.hidden = false;
@@ -545,6 +593,7 @@ function render() {
 
   driverView.style.display = state.user.role === 'driver' ? 'block' : 'none';
   personelView.style.display = state.user.role === 'personel' ? 'block' : 'none';
+  servicePanel.style.display = state.user.role === 'admin' ? 'none' : 'grid';
   adminView.style.display = state.user.role === 'admin' ? 'block' : 'none';
   adminHistoryPanel.style.display = state.user.role === 'admin' ? 'block' : 'none';
   adminReportPanel.style.display = state.user.role === 'admin' ? 'block' : 'none';
@@ -577,6 +626,8 @@ function render() {
 
 async function handleLogin(event) {
   event.preventDefault();
+  showGlobalLoading();
+  const button = loginForm.querySelector('button[type="submit"]');
   const formData = new FormData(loginForm);
   const payload = {
     sicilNo: formData.get('sicilNo'),
@@ -584,6 +635,8 @@ async function handleLogin(event) {
     rememberMe: formData.get('rememberMe') === 'on'
   };
 
+  button.disabled = true;
+  button.classList.add('is-loading');
   try {
     const result = await fetchJson('/api/login', {
       method: 'POST',
@@ -603,12 +656,18 @@ async function handleLogin(event) {
     }
     render();
   } catch (error) {
-    window.alert(error.message || 'Giriş yapılamadı.');
+    showToast(error.message || 'Giriş yapılamadı.', 'error');
+  } finally {
+    button.disabled = false;
+    button.classList.remove('is-loading');
+    hideGlobalLoading();
   }
 }
 
 async function handleRegister(event) {
   event.preventDefault();
+  showGlobalLoading();
+  const button = registerForm.querySelector('button[type="submit"]');
   const formData = new FormData(registerForm);
   const payload = {
     name: formData.get('name'),
@@ -618,6 +677,8 @@ async function handleRegister(event) {
     role: formData.get('role') || 'personel'
   };
 
+  button.disabled = true;
+  button.classList.add('is-loading');
   try {
     const result = await fetchJson('/api/register', {
       method: 'POST',
@@ -630,13 +691,33 @@ async function handleRegister(event) {
     render();
     setAuthTab('login');
   } catch (error) {
-    window.alert(error.message || 'Kayıt başarısız.');
+    showToast(error.message || 'Kayıt başarısız.', 'error');
+  } finally {
+    button.disabled = false;
+    button.classList.remove('is-loading');
+    hideGlobalLoading();
   }
+}
+
+async function handleAdminMessage(event) {
+  event.preventDefault();
+  await runAdminAction(adminMessageSendBtn, async () => {
+    const result = await fetchJson('/api/admin/notify', {
+      method: 'POST',
+      body: JSON.stringify({
+        serviceId: adminMessageTarget.value,
+        label: document.getElementById('adminMessageLabel').value.trim(),
+        message: document.getElementById('adminMessageInput').value.trim()
+      })
+    });
+    document.getElementById('adminMessageInput').value = '';
+    showToast(`${result.sent} servise, ${result.recipients} alıcıya bildirim gönderildi.`);
+  }, 'Gönderildi');
 }
 
 async function joinSelectedService() {
   if (!state.selectedServiceId) {
-    window.alert('Lütfen bir servis seçin.');
+    showToast('Lütfen bir servis seçin.', 'error');
     return;
   }
 
@@ -666,6 +747,16 @@ roleTabButtons.forEach((button) => {
 
 loginForm.addEventListener('submit', handleLogin);
 registerForm.addEventListener('submit', handleRegister);
+adminMessageForm.addEventListener('submit', handleAdminMessage);
+adminCleanupBtn.addEventListener('click', async () => {
+  if (!window.confirm('Tüm hareket geçmişi ve bildirimler silinecek. Devam etmek istiyor musunuz?')) return;
+  await runAdminAction(adminCleanupBtn, async () => {
+    const result = await fetchJson('/api/admin/cleanup', { method: 'POST' });
+    showToast(`${result.logsDeleted} hareket ve ${result.notificationsDeleted} bildirim silindi.`);
+  }, 'Temizlendi', async () => {
+    await Promise.all([loadAdminSummary(), loadAdminReports(), loadAdminServiceHistory()]);
+  });
+});
 joinServiceBtn.addEventListener('click', joinSelectedService);
 logoutBtn.addEventListener('click', logout);
 serviceSelect.addEventListener('focus', renderServiceOptionList);
@@ -683,13 +774,72 @@ document.addEventListener('click', (event) => {
 
 adminReportSearch.addEventListener('input', renderAdminReports);
 
+adminReportDetails.addEventListener('click', async (event) => {
+  const editButton = event.target.closest('.member-edit-btn');
+  const deleteButton = event.target.closest('.member-delete-btn');
+  const userId = editButton?.dataset.userId || deleteButton?.dataset.userId;
+  if (!userId) return;
+
+  if (deleteButton) {
+    if (!window.confirm('Bu üye silinecek. Devam etmek istiyor musunuz?')) return;
+    await runAdminAction(deleteButton, async () => {
+      await fetchJson(`/api/admin/users/${userId}`, { method: 'DELETE' });
+    }, 'Silindi', async () => {
+      await Promise.all([loadAdminReportDetails(state.selectedServiceId, 'members'), loadAdminReports(), loadAdminSummary()]);
+    });
+    return;
+  }
+  const member = {
+    id: editButton.dataset.userId,
+    name: editButton.dataset.name,
+    phone: editButton.dataset.phone,
+    sicilNo: editButton.dataset.sicilNo,
+    role: editButton.dataset.role,
+    serviceId: editButton.dataset.serviceId
+  };
+  document.getElementById('memberEditId').value = member.id;
+  document.getElementById('memberEditName').value = member.name;
+  document.getElementById('memberEditPhone').value = member.phone;
+  document.getElementById('memberEditSicilNo').value = member.sicilNo || '';
+  document.getElementById('memberEditRole').value = member.role;
+  document.getElementById('memberEditService').innerHTML = state.services.map((service) =>
+    `<option value="${escapeHtml(service.id)}">${escapeHtml(service.code)}</option>`).join('');
+  document.getElementById('memberEditService').value = member.serviceId || state.selectedServiceId;
+  document.getElementById('memberEditPassword').value = '';
+  memberEditModal.hidden = false;
+});
+
+memberEditForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  await runAdminAction(memberEditSaveBtn, async () => {
+    await fetchJson(`/api/admin/users/${document.getElementById('memberEditId').value}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        name: document.getElementById('memberEditName').value.trim(),
+        phone: document.getElementById('memberEditPhone').value.trim(),
+        sicilNo: document.getElementById('memberEditSicilNo').value.trim(),
+        role: document.getElementById('memberEditRole').value,
+        serviceId: document.getElementById('memberEditService').value,
+        password: document.getElementById('memberEditPassword').value
+      })
+    });
+  }, 'Güncellendi', async () => {
+    memberEditModal.hidden = true;
+    await Promise.all([loadAdminReportDetails(state.selectedServiceId, 'members'), loadAdminReports(), loadAdminSummary()]);
+  });
+});
+
+document.getElementById('memberEditCancelBtn').addEventListener('click', () => {
+  memberEditModal.hidden = true;
+});
+
 
 document.querySelectorAll('.action-button').forEach((button) => {
   button.addEventListener('click', async () => {
-    if (button.id === 'shareLocationBtn') return;
+    if (button.id === 'shareLocationBtn' || button.id === 'adminCleanupBtn') return;
     const serviceId = state.selectedServiceId;
     if (!serviceId) {
-      window.alert('Önce servis seçin.');
+      showToast('Önce servis seçin.', 'error');
       return;
     }
 
@@ -726,93 +876,175 @@ document.getElementById('messageForm').addEventListener('submit', async (event) 
 
   const serviceId = state.selectedServiceId;
   if (!serviceId) {
-    window.alert('Önce servis seçin.');
+    showToast('Önce servis seçin.', 'error');
     return;
   }
 
-  await sendNotification({
-    serviceId,
-    type: 'message',
-    label: 'Özel Mesaj',
-    message: text,
-    senderName: state.user?.name || 'Sürücü'
-  });
-
-  messageInput.value = '';
+  const button = event.currentTarget.querySelector('button[type="submit"]');
+  await runAdminAction(button, async () => {
+    await sendNotification({
+      serviceId,
+      type: 'message',
+      label: 'Özel Mesaj',
+      message: text,
+      senderName: state.user?.name || 'Sürücü'
+    });
+    messageInput.value = '';
+    showToast('Özel mesaj gönderildi.');
+  }, 'Gönderildi');
 });
 
 requestLocationBtn.addEventListener('click', async () => {
   const serviceId = state.selectedServiceId;
   if (!serviceId) {
-    window.alert('Önce servis seçin.');
+    showToast('Önce servis seçin.', 'error');
     return;
   }
 
-  await sendNotification({
-    serviceId,
-    type: 'location_request',
-    label: 'Servisim Nerede?',
-    message: `${state.user?.name || 'Personel'} konum talebinde bulundu.`,
-    senderName: state.user?.name || 'Personel'
-  });
+  await runAdminAction(requestLocationBtn, async () => {
+    await sendNotification({
+      serviceId,
+      type: 'location_request',
+      label: 'Servisim Nerede?',
+      message: `${state.user?.name || 'Personel'} konum talebinde bulundu.`,
+      senderName: state.user?.name || 'Personel'
+    });
+    staffStatusBox.textContent = 'Servisim nerede? Konum talebi gönderildi.';
+    showToast('Konum talebi gönderildi.');
+  }, 'Gönderildi');
+});
 
-  staffStatusBox.textContent = 'Servisim nerede? Konum talebi gönderildi.';
+async function handleCleanupLogs(button) {
+  if (!state.selectedServiceId) {
+    showToast('Önce servis seçin.', 'error');
+    return;
+  }
+
+  const defaultText = button.textContent;
+  button.disabled = true;
+  button.classList.add('is-loading');
+  button.textContent = 'Temizleniyor...';
+
+  try {
+    const result = await fetchJson('/api/cleanup-logs', { method: 'POST' });
+    
+    button.classList.remove('is-loading');
+    button.classList.add('is-success');
+    button.textContent = `✓ ${result.logsDeleted} log silindi`;
+    
+    const statusBox = state.user?.role === 'driver' ? driverStatusBox : staffStatusBox;
+    statusBox.textContent = `Geçmiş temizlendi: ${result.logsDeleted} log, ${result.notificationsDeleted} bildirim silindi.`;
+    
+    setTimeout(() => {
+      button.classList.remove('is-success');
+      button.textContent = defaultText;
+      button.disabled = false;
+    }, 3000);
+  } catch (error) {
+    button.classList.remove('is-loading');
+    button.classList.add('is-error');
+    button.textContent = 'Tekrar Dene';
+    
+    setTimeout(() => {
+      button.classList.remove('is-error');
+      button.textContent = defaultText;
+      button.disabled = false;
+    }, 2000);
+    
+    showToast(error.message || 'Geçmiş temizlenirken hata oluştu.', 'error');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cleanupLogsBtnDriver = document.getElementById('cleanupLogsBtnDriver');
+  const cleanupLogsBtnPersonel = document.getElementById('cleanupLogsBtnPersonel');
+
+  if (cleanupLogsBtnDriver) {
+    cleanupLogsBtnDriver.addEventListener('click', () => handleCleanupLogs(cleanupLogsBtnDriver));
+  }
+
+  if (cleanupLogsBtnPersonel) {
+    cleanupLogsBtnPersonel.addEventListener('click', () => handleCleanupLogs(cleanupLogsBtnPersonel));
+  }
 });
 
 shareLocationBtn.addEventListener('click', () => {
   if (!state.selectedServiceId) {
-    window.alert('Önce servis seçin.');
+    showToast('Önce servis seçin.', 'error');
     return;
   }
 
   if (!navigator.geolocation) {
+    shareLocationBtn.disabled = true;
+    shareLocationBtn.classList.add('is-loading');
     sendNotification({
       serviceId: state.selectedServiceId,
       type: 'driver_location',
       label: 'Canlı Konum',
       senderName: state.user?.name || 'Sürücü',
       message: 'Konum bilgisi cihaz tarafından desteklenmiyor.'
-    });
+    }).then(() => showToast('Konum bilgisi gönderildi.')).catch((error) => showToast(error.message, 'error'))
+      .finally(() => {
+        shareLocationBtn.disabled = false;
+        shareLocationBtn.classList.remove('is-loading');
+      });
     return;
   }
 
+  shareLocationBtn.disabled = true;
+  shareLocationBtn.classList.add('is-loading');
   navigator.geolocation.getCurrentPosition(async (position) => {
     const coordinates = {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     };
 
-    await sendNotification({
-      serviceId: state.selectedServiceId,
-      type: 'driver_location',
-      label: 'Canlı Konum',
-      senderName: state.user?.name || 'Sürücü',
-      coordinates,
-      message: `Konum paylaşıldı: ${coordinates.latitude.toFixed(4)}, ${coordinates.longitude.toFixed(4)}`
-    });
-
-    driverStatusBox.textContent = `Canlı konum paylaşıldı • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
+    try {
+      await sendNotification({
+        serviceId: state.selectedServiceId,
+        type: 'driver_location',
+        label: 'Canlı Konum',
+        senderName: state.user?.name || 'Sürücü',
+        coordinates,
+        message: `Konum paylaşıldı: ${coordinates.latitude.toFixed(4)}, ${coordinates.longitude.toFixed(4)}`
+      });
+      driverStatusBox.textContent = `Canlı konum paylaşıldı • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
+      showToast('Konum bilgisi gönderildi.');
+    } catch (error) {
+      showToast(error.message || 'Konum gönderilemedi.', 'error');
+    } finally {
+      shareLocationBtn.disabled = false;
+      shareLocationBtn.classList.remove('is-loading');
+    }
   }, async () => {
-    await sendNotification({
-      serviceId: state.selectedServiceId,
-      type: 'driver_location',
-      label: 'Canlı Konum',
-      senderName: state.user?.name || 'Sürücü',
-      message: 'Konum bilgisi alınamadı.'
-    });
-    driverStatusBox.textContent = 'Konum bilgisi alınamadı.';
+    try {
+      await sendNotification({
+        serviceId: state.selectedServiceId,
+        type: 'driver_location',
+        label: 'Canlı Konum',
+        senderName: state.user?.name || 'Sürücü',
+        message: 'Konum bilgisi alınamadı.'
+      });
+      driverStatusBox.textContent = 'Konum bilgisi alınamadı.';
+      showToast('Konum alınamadı; durum bildirimi gönderildi.', 'error');
+    } catch (error) {
+      showToast(error.message || 'Bildirim gönderilemedi.', 'error');
+    } finally {
+      shareLocationBtn.disabled = false;
+      shareLocationBtn.classList.remove('is-loading');
+    }
   }, { enableHighAccuracy: true, timeout: 15000 });
 });
 
 addServiceBtn.addEventListener('click', async () => {
   if (state.user?.role !== 'admin') {
-    window.alert('Yalnızca yönetici servis ekleyebilir.');
+    showToast('Yalnızca yönetici servis ekleyebilir.', 'error');
     return;
   }
 
   const value = serviceCodeInput.value.trim();
   if (!value) {
-    window.alert('Servis numarası girin.');
+    showToast('Servis numarası girin.', 'error');
     return;
   }
 
@@ -844,6 +1076,7 @@ serviceAdminList.addEventListener('click', async (event) => {
       await loadAdminServices();
       await loadAdminSummary();
     });
+
     return;
   }
 
@@ -864,20 +1097,71 @@ serviceAdminList.addEventListener('click', async (event) => {
   }
 });
 
-adminReportList.addEventListener('click', (event) => {
-  const button = event.target.closest('.report-detail-btn');
-  if (!button) return;
-  loadAdminReportDetails(button.dataset.serviceId, button.dataset.detail);
-});
+adminReportList.addEventListener('click', async (event) => {
+  const detailButton = event.target.closest('.report-detail-btn');
+  if (detailButton) {
+    loadAdminReportDetails(detailButton.dataset.serviceId, detailButton.dataset.detail);
+    return;
+  }
 
-adminReportDetails.addEventListener('click', async (event) => {
-  const button = event.target.closest('.mark-admin-read');
-  if (!button) return;
-  await runAdminAction(button, async () => {
-    await fetchJson(`/api/admin/notifications/${button.dataset.notificationId}/read`, { method: 'PATCH' });
-    await loadAdminReports();
-    await loadAdminReportDetails(button.closest('.report-details')?.dataset.serviceId || state.selectedServiceId, 'unread');
-  }, 'Okundu');
+  const exportButton = event.target.closest('.export-btn');
+  if (!exportButton) return;
+
+  const { serviceId, serviceCode, export: exportType } = exportButton.dataset;
+  if (!serviceId || !exportType) return;
+
+  const defaultText = exportButton.textContent;
+  exportButton.disabled = true;
+  exportButton.classList.add('is-loading');
+  exportButton.textContent = 'Hazırlanıyor...';
+
+  try {
+    const response = await fetch(`/api/admin/reports/service/${serviceId}/export/${exportType}`, {
+      headers: authHeaders()
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || 'Dosya indirilemedi.');
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const extension = exportType === 'excel' ? 'xlsx' : 'pdf';
+    a.download = `Oyak_Servis_Raporu_${serviceCode}_${dateStr}.${extension}`;
+    
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    exportButton.classList.remove('is-loading');
+    exportButton.classList.add('is-success');
+    exportButton.textContent = '✓ İndirildi';
+    
+    setTimeout(() => {
+      exportButton.classList.remove('is-success');
+      exportButton.textContent = defaultText;
+      exportButton.disabled = false;
+    }, 2000);
+  } catch (error) {
+    exportButton.classList.remove('is-loading');
+    exportButton.classList.add('is-error');
+    exportButton.textContent = 'Tekrar Dene';
+    
+    setTimeout(() => {
+      exportButton.classList.remove('is-error');
+      exportButton.textContent = defaultText;
+      exportButton.disabled = false;
+    }, 2000);
+    
+    showToast(error.message || 'Dosya indirilemedi. Lütfen tekrar deneyin.', 'error');
+  }
 });
 
 async function init() {
@@ -894,7 +1178,11 @@ async function init() {
   } catch (error) {
     state.user = null;
     render();
+  } finally {
+    hideGlobalLoading();
   }
 }
 
 init();
+
+window.addEventListener('beforeunload', showGlobalLoading);

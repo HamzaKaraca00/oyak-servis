@@ -12,6 +12,13 @@
     <link rel="stylesheet" href="/styles.css?v=red-theme-4" />
   </head>
   <body>
+    <div id="globalLoading" class="global-loading" role="status" aria-live="polite" aria-label="Sayfa yükleniyor">
+      <div class="global-loading-content">
+        <img src="/oyak-logo.svg?v=official-1" alt="" class="global-loading-logo" />
+        <strong>Oyak Servis Takip</strong>
+        <span class="global-loading-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+    </div>
     <div class="app-shell">
       <section id="authView" class="view active">
         <div class="auth-card">
@@ -99,7 +106,9 @@
           <div id="adminStats" class="stats-grid"></div>
 
           <div class="log-panel service-admin-panel">
-            <h4>Servis Yönetimi</h4>
+            <div class="panel-header">
+              <h4>Servis Yönetimi</h4>
+            </div>
             <div class="service-admin-actions">
               <div>
                 <label>
@@ -109,7 +118,29 @@
               </div>
               <button id="addServiceBtn" class="primary-button">Servis Ekle</button>
             </div>
-            <ul id="serviceAdminList" class="notification-list compact"></ul>
+            <details class="service-list-details">
+              <summary>Tüm servisler</summary>
+              <ul id="serviceAdminList" class="notification-list compact"></ul>
+            </details>
+          </div>
+
+          <div class="log-panel admin-message-panel">
+            <h4>Mesaj / Bildirim Gönder</h4>
+            <form id="adminMessageForm" class="admin-message-form">
+              <label>
+                Alıcı
+                <select id="adminMessageTarget" required></select>
+              </label>
+              <label>
+                Başlık
+                <input id="adminMessageLabel" type="text" maxlength="120" value="Yönetici Bildirimi" required />
+              </label>
+              <label>
+                Mesaj
+                <textarea id="adminMessageInput" rows="3" maxlength="500" placeholder="Servis duyurunuzu yazın" required></textarea>
+              </label>
+              <button id="adminMessageSendBtn" type="submit" class="primary-button">Bildirimi Gönder</button>
+            </form>
           </div>
 
         </div>
@@ -151,6 +182,7 @@
           <div class="quick-actions utility-actions">
             <button class="action-button info" data-alert="delayed" data-label="Rötar bildirimi" data-message="🚌 Serviste gecikme var." data-stage="delayed">Rötar Bildir</button>
             <button id="shareLocationBtn" class="action-button secondary-location" type="button">Canlı Konum Paylaş</button>
+            <button id="cleanupLogsBtnDriver" class="action-button cleanup" type="button">Geçmişi Temizle</button>
           </div>
 
           <form id="messageForm" class="message-form">
@@ -172,13 +204,17 @@
           </div>
           <div class="quick-actions compact-actions">
             <button id="requestLocationBtn" class="action-button secondary-location" type="button">Servisim Nerede?</button>
+            <button id="cleanupLogsBtnPersonel" class="action-button cleanup" type="button">Geçmişi Temizle</button>
           </div>
           <ul id="notificationList" class="notification-list"></ul>
         </div>
 
         <div id="adminHistoryPanel" class="role-panel admin-panel">
           <div class="log-panel">
-            <h4>Hareket Geçmişi</h4>
+            <div class="panel-header">
+              <h4>Hareket Geçmişi</h4>
+              <button id="adminCleanupBtn" type="button" class="action-button cleanup">Tüm Hareketleri Temizle</button>
+            </div>
             <ul id="adminServiceHistoryList" class="notification-list compact"></ul>
           </div>
         </div>
@@ -193,6 +229,23 @@
         </div>
 
       </section>
+    </div>
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <div id="memberEditModal" class="modal" hidden>
+      <form id="memberEditForm" class="modal-card">
+        <div class="panel-header">
+          <h4>Üye Bilgilerini Düzenle</h4>
+          <button id="memberEditCancelBtn" type="button" class="secondary-button">Kapat</button>
+        </div>
+        <input id="memberEditId" type="hidden" />
+        <label>Ad Soyad<input id="memberEditName" required maxlength="100" /></label>
+        <label>Telefon<input id="memberEditPhone" required /></label>
+        <label>Sicil No<input id="memberEditSicilNo" required minlength="3" maxlength="20" /></label>
+        <label>Rol<select id="memberEditRole"><option value="personel">Personel</option><option value="driver">Sürücü</option></select></label>
+        <label>Servis<select id="memberEditService"></select></label>
+        <label>Yeni Şifre <small>(değiştirmek istemiyorsanız boş bırakın)</small><input id="memberEditPassword" type="password" minlength="8" maxlength="128" /></label>
+        <button id="memberEditSaveBtn" type="submit" class="primary-button">Değişiklikleri Kaydet</button>
+      </form>
     </div>
 
     <script src="/app.js"></script>

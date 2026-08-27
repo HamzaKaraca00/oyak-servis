@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { randomUUID } = require('crypto');
 const webpush = require('web-push');
+const ExcelJS = require('exceljs');
+const PDFDocument = require('pdfkit');
 
 const app = express();
 
@@ -357,6 +359,27 @@ async function createNotification(logEntry) {
   return recipients.map((user) => user.id);
 }
 
+async function createAdminNotifications(logEntry, serviceIds) {
+  const db = await readDb();
+  db.logs = Array.isArray(db.logs) ? db.logs : [];
+  db.notifications = Array.isArray(db.notifications) ? db.notifications : [];
+  const recipientIds = [];
+
+  serviceIds.forEach((serviceId) => {
+    const serviceLog = { ...logEntry, id: randomUUID(), serviceId };
+    db.logs.unshift(serviceLog);
+    db.users
+      .filter((user) => user.serviceId === serviceId && user.id !== logEntry.senderId)
+      .forEach((user) => {
+        db.notifications.unshift({ ...serviceLog, userId: user.id, readAt: null });
+        recipientIds.push(user.id);
+      });
+  });
+
+  await writeDb(db);
+  return recipientIds;
+}
+
 async function sendPushNotifications(userIds, notification) {
   if (!PUSH_ENABLED || !userIds.length) return;
 
@@ -696,8 +719,8 @@ app.get('/api/admin/services/:id/details', requireAuth, async (req, res) => {
   }
 
   const members = (db.users || [])
-    .filter((entry) => entry.serviceId === service.id && entry.role === 'personel')
-    .map((entry) => ({ id: entry.id, name: entry.name, phone: entry.phone, role: entry.role }));
+    .filter((entry) => entry.serviceId === service.id && ['personel', 'driver'].includes(entry.role))
+    .map((entry) => ({ id: entry.id, name: entry.name, phone: entry.phone, sicilNo: entry.sicilNo, role: entry.role, serviceId: entry.serviceId }));
   const memberIds = new Set(members.map((entry) => entry.id));
   const unreadNotifications = (db.notifications || [])
     .filter((entry) => memberIds.has(entry.userId) && !entry.readAt)
@@ -707,6 +730,62 @@ app.get('/api/admin/services/:id/details', requireAuth, async (req, res) => {
   return res.json({ service, members, unreadNotifications });
 });
 
+app.patch('/api/admin/users/:id', requireAuth, async (req, res) => {
+  const admin = await requireRole(req, res, ['admin']);
+  if (!admin) return;
+
+  const { name, phone, sicilNo, role, serviceId, password } = req.body || {};
+  const db = await readDb();
+  const user = (db.users || []).find((entry) => entry.id === req.params.id && entry.role !== 'admin');
+  if (!user) return res.status(404).json({ message: 'Üye bulunamadı.' });
+
+  if (!isValidText(String(name || '').trim(), 100)) {
+    return res.status(400).json({ message: 'Geçerli bir ad soyad girin.' });
+  }
+  const normalizedPhone = normalizeTurkishPhone(phone);
+  if (!normalizedPhone) return res.status(400).json({ message: 'Geçerli bir telefon numarası girin.' });
+  const normalizedSicilNo = String(sicilNo || '').trim();
+  if (!/^\d{3,20}$/.test(normalizedSicilNo)) {
+    return res.status(400).json({ message: 'Sicil no 3-20 rakamdan oluşmalıdır.' });
+  }
+  if ((db.users || []).some((entry) => entry.id !== user.id && (entry.phone === normalizedPhone || String(entry.sicilNo) === normalizedSicilNo))) {
+    return res.status(409).json({ message: 'Telefon veya sicil no zaten kayıtlı.' });
+  }
+  if (role != null && !['personel', 'driver'].includes(role)) {
+    return res.status(400).json({ message: 'Geçersiz üye rolü.' });
+  }
+  if (serviceId != null && !(db.services || []).some((entry) => entry.id === serviceId)) {
+    return res.status(400).json({ message: 'Geçersiz servis.' });
+  }
+  if (password && (String(password).length < 8 || String(password).length > 128)) {
+    return res.status(400).json({ message: 'Şifre 8-128 karakter arasında olmalıdır.' });
+  }
+
+  user.name = String(name).trim();
+  user.phone = normalizedPhone;
+  user.sicilNo = normalizedSicilNo;
+  if (role != null) user.role = role;
+  if (serviceId != null) user.serviceId = serviceId;
+  if (password) user.passwordHash = await bcrypt.hash(password, 12);
+  await writeDb(db);
+  return res.json({ user: sanitizeUser(user) });
+});
+
+app.delete('/api/admin/users/:id', requireAuth, async (req, res) => {
+  const admin = await requireRole(req, res, ['admin']);
+  if (!admin) return;
+
+  const db = await readDb();
+  const index = (db.users || []).findIndex((entry) => entry.id === req.params.id && entry.role !== 'admin');
+  if (index === -1) return res.status(404).json({ message: 'Üye bulunamadı.' });
+
+  const [deleted] = db.users.splice(index, 1);
+  db.notifications = (db.notifications || []).filter((entry) => entry.userId !== deleted.id);
+  db.pushSubscriptions = (db.pushSubscriptions || []).filter((entry) => entry.userId !== deleted.id);
+  await writeDb(db);
+  return res.json({ deleted: true, user: sanitizeUser(deleted) });
+});
+
 app.patch('/api/admin/notifications/:id/read', requireAuth, async (req, res) => {
   const user = await getUserById(req.user.id);
   if (!user || user.role !== 'admin') {
@@ -714,14 +793,17 @@ app.patch('/api/admin/notifications/:id/read', requireAuth, async (req, res) => 
   }
 
   const db = await readDb();
-  const notification = (db.notifications || []).find((entry) => entry.id === req.params.id);
-  if (!notification) {
+  const notifications = (db.notifications || []).filter((entry) => entry.id === req.params.id);
+  if (!notifications.length) {
     return res.status(404).json({ message: 'Notification not found.' });
   }
 
-  notification.readAt = new Date().toISOString();
+  const readAt = new Date().toISOString();
+  notifications.forEach((notification) => {
+    notification.readAt = readAt;
+  });
   await writeDb(db);
-  return res.json(notification);
+  return res.json({ ...notifications[0], updatedCount: notifications.length });
 });
 
 app.get('/api/admin/summary', requireAuth, async (req, res) => {
@@ -772,6 +854,183 @@ app.get('/api/admin/reports', requireAuth, async (req, res) => {
   });
 
   return res.json({ generatedAt: new Date().toISOString(), reports });
+});
+
+app.get('/api/admin/reports/service/:serviceId/export/excel', requireAuth, async (req, res) => {
+  const user = await getUserById(req.user.id);
+  if (!user || user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access is required.' });
+  }
+
+  const db = await readDb();
+  const service = (db.services || []).find((entry) => entry.id === req.params.serviceId);
+  if (!service) {
+    return res.status(404).json({ message: 'Service not found.' });
+  }
+
+  const members = (db.users || [])
+    .filter((entry) => entry.serviceId === service.id && entry.role === 'personel')
+    .map((entry) => ({
+      id: entry.id,
+      name: entry.name,
+      phone: entry.phone,
+      sicilNo: entry.sicilNo,
+      role: entry.role
+    }));
+
+  try {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sefer Raporu');
+
+    worksheet.columns = [
+      { header: 'Tarih', key: 'date', width: 22 },
+      { header: 'Servis', key: 'service', width: 12 },
+      { header: 'İşlem', key: 'type', width: 20 },
+      { header: 'Başlık', key: 'label', width: 30 },
+      { header: 'Mesaj', key: 'message', width: 55 },
+      { header: 'Gönderen', key: 'senderName', width: 25 }
+    ];
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFE30613' }
+    };
+    (db.logs || [])
+      .filter((entry) => entry.serviceId === service.id)
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      .forEach((entry) => worksheet.addRow({
+        date: new Date(entry.createdAt).toLocaleString('tr-TR'),
+        service: service.code,
+        type: entry.type,
+        label: entry.label,
+        message: entry.message,
+        senderName: entry.senderName
+      }));
+
+    const memberWorksheet = workbook.addWorksheet('Yolcular');
+    memberWorksheet.columns = [
+      { header: 'Ad Soyad', key: 'name', width: 30 },
+      { header: 'Sicil No', key: 'sicilNo', width: 15 },
+      { header: 'Telefon', key: 'phone', width: 15 },
+      { header: 'Rol', key: 'role', width: 15 }
+    ];
+    memberWorksheet.getRow(1).font = { bold: true };
+    memberWorksheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFE30613' }
+    };
+    members.forEach((member) => {
+      memberWorksheet.addRow({
+        name: member.name,
+        sicilNo: member.sicilNo,
+        phone: member.phone,
+        role: member.role
+      });
+    });
+
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const fileName = `Oyak_Servis_Raporu_${service.code}_${dateStr}.xlsx`;
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error('Excel export error:', error);
+    return res.status(500).json({ message: 'Excel dosyası oluşturulurken hata oluştu.' });
+  }
+});
+
+app.get('/api/admin/reports/service/:serviceId/export/pdf', requireAuth, async (req, res) => {
+  const user = await getUserById(req.user.id);
+  if (!user || user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access is required.' });
+  }
+
+  const db = await readDb();
+  const service = (db.services || []).find((entry) => entry.id === req.params.serviceId);
+  if (!service) {
+    return res.status(404).json({ message: 'Service not found.' });
+  }
+
+  const members = (db.users || [])
+    .filter((entry) => entry.serviceId === service.id && entry.role === 'personel')
+    .map((entry) => ({
+      id: entry.id,
+      name: entry.name,
+      phone: entry.phone,
+      sicilNo: entry.sicilNo,
+      role: entry.role
+    }));
+
+  if (!members.length) {
+    return res.status(404).json({ message: 'Bu servise bağlı personel bulunamadı.' });
+  }
+
+  try {
+    const doc = new PDFDocument({ margin: 50, size: 'A4' });
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('tr-TR');
+    const fileName = `Oyak_Servis_Raporu_${service.code}_${dateStr}.pdf`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+
+    doc.pipe(res);
+
+    doc.fontSize(20).font('Helvetica-Bold').fillColor('#E30613')
+       .text('OYAK Servis Raporu', { align: 'center' });
+    
+    doc.fontSize(14).font('Helvetica').fillColor('#333333')
+       .text(`Servis No: ${service.code}`, { align: 'center' });
+    
+    doc.fontSize(12).fillColor('#666666')
+       .text(`Tarih: ${dateStr}`, { align: 'center' });
+    
+    doc.moveDown(2);
+
+    const tableTop = doc.y;
+    const headers = ['Ad Soyad', 'Sicil No', 'Telefon', 'Rol'];
+    const columnWidths = [200, 100, 100, 80];
+    const rowHeight = 30;
+    const startX = 50;
+
+    doc.fontSize(10).font('Helvetica-Bold').fillColor('#FFFFFF');
+
+    headers.forEach((header, i) => {
+      const x = startX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
+      doc.rect(x, tableTop, columnWidths[i], rowHeight).fill('#E30613');
+      doc.text(header, x + 5, tableTop + 10, { width: columnWidths[i] - 10, align: 'left' });
+    });
+
+    doc.fontSize(10).font('Helvetica').fillColor('#333333');
+
+    members.forEach((member, rowIndex) => {
+      const y = tableTop + rowHeight + (rowIndex * rowHeight);
+      
+      if (y > 750) {
+        doc.addPage();
+        return;
+      }
+
+      const rowData = [member.name, member.sicilNo, member.phone, member.role];
+      
+      rowData.forEach((data, i) => {
+        const x = startX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
+        doc.rect(x, y, columnWidths[i], rowHeight).stroke();
+        doc.text(String(data || ''), x + 5, y + 10, { width: columnWidths[i] - 10, align: 'left' });
+      });
+    });
+
+    doc.end();
+  } catch (error) {
+    console.error('PDF export error:', error);
+    return res.status(500).json({ message: 'PDF dosyası oluşturulurken hata oluştu.' });
+  }
 });
 
 // Real-time-ish notifications over plain HTTP (works everywhere, including serverless hosts
@@ -839,6 +1098,44 @@ app.post('/api/notify', requireAuth, async (req, res) => {
     console.error('Push delivery failed:', error.name || 'PushError');
   });
   return res.status(201).json(logEntry);
+});
+
+app.post('/api/admin/notify', requireAuth, async (req, res) => {
+  const admin = await requireRole(req, res, ['admin']);
+  if (!admin) return;
+
+  const { serviceId, label, message } = req.body || {};
+  if (serviceId !== 'all' && !isValidText(String(serviceId || ''), 100)) {
+    return res.status(400).json({ message: 'Geçerli bir servis seçin.' });
+  }
+  if (!isValidText(String(message || '').trim(), 500)) {
+    return res.status(400).json({ message: 'Mesaj boş olamaz ve 500 karakteri geçemez.' });
+  }
+  if (label != null && String(label).length > 120) {
+    return res.status(400).json({ message: 'Bildirim başlığı çok uzun.' });
+  }
+
+  const db = await readDb();
+  const serviceIds = serviceId === 'all'
+    ? (db.services || []).map((service) => service.id)
+    : [serviceId];
+  if (!serviceIds.length || serviceIds.some((id) => !(db.services || []).some((service) => service.id === id))) {
+    return res.status(404).json({ message: 'Servis bulunamadı.' });
+  }
+
+  const logEntry = {
+    type: 'admin_message',
+    label: String(label || 'Yönetici Bildirimi').trim().slice(0, 120),
+    message: String(message).trim().slice(0, 500),
+    senderName: admin.name,
+    senderId: admin.id,
+    createdAt: new Date().toISOString()
+  };
+  const recipientIds = await createAdminNotifications(logEntry, serviceIds);
+  sendPushNotifications(recipientIds, { ...logEntry, id: randomUUID() }).catch((error) => {
+    console.error('Push delivery failed:', error.name || 'PushError');
+  });
+  return res.status(201).json({ sent: serviceIds.length, recipients: recipientIds.length });
 });
 
 app.get('/api/push/public-key', requireAuth, (_req, res) => {
@@ -926,6 +1223,65 @@ app.get('/api/services/:id/notifications', requireAuth, async (req, res) => {
     .slice(-50);
 
   return res.json(entries);
+});
+
+// Manual log cleanup endpoint for drivers and personnel
+app.post('/api/cleanup-logs', requireAuth, async (req, res) => {
+  const user = await getUserById(req.user.id);
+  if (!user || !['driver', 'personel'].includes(user.role)) {
+    return res.status(403).json({ message: 'Bu işlem için yetkiniz yok.' });
+  }
+
+  if (!user.serviceId) {
+    return res.status(400).json({ message: 'Önce bir servise bağlanmalısınız.' });
+  }
+
+  try {
+    const db = await readDb();
+    const originalLogCount = db.logs.length;
+    const originalNotificationCount = db.notifications.length;
+    
+    // Keep only logs from the last 24 hours for the user's service
+    const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    db.logs = db.logs.filter(log => 
+      log.serviceId !== user.serviceId || log.createdAt >= cutoffTime
+    );
+    
+    // Clean up old notifications for the user's service (keep only last 7 days)
+    const notificationCutoffTime = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    db.notifications = db.notifications.filter(notification => 
+      notification.serviceId !== user.serviceId || notification.createdAt >= notificationCutoffTime
+    );
+    
+    await writeDb(db);
+    
+    const logsDeleted = originalLogCount - db.logs.length;
+    const notificationsDeleted = originalNotificationCount - db.notifications.length;
+    
+    return res.json({ 
+      message: 'Geçmiş temizlendi.',
+      logsDeleted,
+      notificationsDeleted
+    });
+
+  } catch (error) {
+    console.error('Log temizleme hatası:', error);
+    return res.status(500).json({ message: 'Geçmiş temizlenirken hata oluştu.' });
+  }
+});
+
+app.post('/api/admin/cleanup', requireAuth, async (req, res) => {
+  const admin = await requireRole(req, res, ['admin']);
+  if (!admin) return;
+
+  const db = await readDb();
+  const logsDeleted = (db.logs || []).length;
+  const notificationsDeleted = (db.notifications || []).length;
+  db.logs = [];
+  db.notifications = [];
+  await writeDb(db);
+
+  return res.json({ message: 'Tüm hareket ve bildirim kayıtları temizlendi.', logsDeleted, notificationsDeleted });
 });
 
 app.get('*', (_req, res) => {
