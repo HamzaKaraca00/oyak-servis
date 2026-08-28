@@ -5,7 +5,7 @@
       "name": "Admin",
       "phone": "admin",
       "sicilNo": "0001",
-      "passwordHash": "$2a$12$zkYFUcRq34QjRlbOUMiMfOjfi7syjI8oBfhAo/vNQRELFHiq94mXS",
+      "passwordHash": "$2a$12$qOFlNK8pmOKXl3WOBvjqTeIDORv6p1j04gPSL2l0ovhz5KJ1FmnNG",
       "role": "admin",
       "serviceId": null,
       "createdAt": "2026-08-26T18:33:58.664Z"
