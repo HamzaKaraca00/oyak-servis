@@ -79,6 +79,72 @@ const staffStatusBox = document.getElementById('staffStatusBox');
 const driverServiceLabel = document.getElementById('driverServiceLabel');
 const staffServiceLabel = document.getElementById('staffServiceLabel');
 const AUTO_LOGIN_DELAY_MS = 3 * 60 * 1000;
+const DRIVER_LOCATION_BROADCAST_MS = 7.5 * 60 * 1000;
+let liveLocationBroadcastTimer = null;
+
+function stopLiveLocationBroadcast() {
+  if (liveLocationBroadcastTimer) {
+    clearInterval(liveLocationBroadcastTimer);
+    liveLocationBroadcastTimer = null;
+  }
+}
+
+async function sendDriverLocationUpdate() {
+  if (!state.selectedServiceId || !state.user || state.user.role !== 'driver') return;
+
+  if (!navigator.geolocation) return;
+
+  await new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const coordinates = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
+
+      try {
+        const locationLabel = await resolveLocationLabel(coordinates.latitude, coordinates.longitude);
+        const message = locationLabel
+          ? `Konum paylaşıldı: ${locationLabel}`
+          : `Konum paylaşıldı: ${formatCoordinateFallback(coordinates.latitude, coordinates.longitude)}`;
+
+        await sendNotification({
+          serviceId: state.selectedServiceId,
+          type: 'driver_location',
+          label: 'Canlı Konum',
+          senderName: state.user?.name || 'Sürücü',
+          coordinates,
+          locationLabel,
+          message
+        });
+        driverStatusBox.textContent = `Canlı konum paylaşıldı • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
+      } catch (error) {
+        // Silent retry on next cycle; avoid spamming the user with repeated failures.
+      }
+      resolve();
+    }, () => {
+      resolve();
+    }, { enableHighAccuracy: true, timeout: 15000 });
+  });
+}
+
+async function startDriverLocationBroadcast() {
+  if (!state.user || state.user.role !== 'driver' || !navigator.geolocation) return;
+
+  try {
+    if (navigator.permissions && navigator.permissions.query) {
+      const permission = await navigator.permissions.query({ name: 'geolocation' });
+      if (permission.state !== 'granted') return;
+    }
+  } catch (error) {
+    // Browsers without permission API should still work when geolocation is otherwise allowed.
+  }
+
+  stopLiveLocationBroadcast();
+  await sendDriverLocationUpdate();
+  liveLocationBroadcastTimer = window.setInterval(() => {
+    sendDriverLocationUpdate().catch(() => {});
+  }, DRIVER_LOCATION_BROADCAST_MS);
+}
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
@@ -621,7 +687,7 @@ function getLocationMapEmbedUrl(latitude, longitude) {
   const lat = Number(latitude);
   const lon = Number(longitude);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
-  return `https://www.google.com/maps?q=${encodeURIComponent(`${lat},${lon}`)}&z=15&output=embed`;
+  return `https://maps.google.com/maps?q=${encodeURIComponent(`${lat},${lon}`)}&z=15&output=embed`;
 }
 
 function renderNotifications() {
@@ -691,6 +757,7 @@ function startAdminAutoRefresh() {
 function logout() {
   stopPolling();
   stopAdminAutoRefresh();
+  stopLiveLocationBroadcast();
   localStorage.removeItem('rememberedAppOpenedAt');
   state.user = null;
   state.notifications = [];
@@ -727,6 +794,7 @@ function render() {
       const activeService = state.services.find((s) => s.id === state.selectedServiceId);
       driverStatusBox.textContent = `Aktif servis: Servis ${activeService?.code || '00'}`;
     }
+    startDriverLocationBroadcast().catch(() => {});
   }
 
   if (state.user.role === 'personel') {
@@ -1147,6 +1215,7 @@ shareLocationBtn.addEventListener('click', () => {
         message
       });
       driverStatusBox.textContent = `Canlı konum paylaşıldı • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
+      await startDriverLocationBroadcast();
       showToast('Konum bilgisi gönderildi.');
     } catch (error) {
       showToast(error.message || 'Konum gönderilemedi.', 'error');
