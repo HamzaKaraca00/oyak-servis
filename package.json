@@ -15,7 +15,6 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "pdfkit": "^0.20.1",
-    "uuid": "^11.0.2",
     "web-push": "^3.6.7"
   }
 }

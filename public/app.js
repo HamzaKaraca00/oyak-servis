@@ -390,7 +390,6 @@ function selectService(serviceId) {
 
 async function fetchJson(url, options = {}) {
   const response = await fetch(url, {
-    headers: authHeaders(),
     ...options,
     headers: { ...authHeaders(), ...(options.headers || {}) }
   });
@@ -567,8 +566,32 @@ function renderNotifications() {
   `).join('');
 }
 
+// Admin paneli, personel/sürücü tarafındaki 3 saniyelik bildirim polling'inden ayrı olarak
+// özet/rapor/geçmiş verilerini kendi başına yenilemiyordu. Sistemin geri kalanıyla tutarlı
+// olması için burada da hafif bir otomatik yenileme döngüsü kuruyoruz.
+const ADMIN_REFRESH_INTERVAL_MS = 15000;
+let adminRefreshTimer = null;
+
+function stopAdminAutoRefresh() {
+  if (adminRefreshTimer) {
+    clearInterval(adminRefreshTimer);
+    adminRefreshTimer = null;
+  }
+}
+
+function startAdminAutoRefresh() {
+  stopAdminAutoRefresh();
+  adminRefreshTimer = setInterval(() => {
+    if (state.user?.role !== 'admin') return;
+    loadAdminSummary();
+    loadAdminReports();
+    loadAdminServiceHistory();
+  }, ADMIN_REFRESH_INTERVAL_MS);
+}
+
 function logout() {
   stopPolling();
+  stopAdminAutoRefresh();
   localStorage.removeItem('rememberedAppOpenedAt');
   state.user = null;
   state.notifications = [];
@@ -621,6 +644,9 @@ function render() {
     loadAdminServices();
     loadAdminReports();
     loadAdminServiceHistory();
+    startAdminAutoRefresh();
+  } else {
+    stopAdminAutoRefresh();
   }
 }
 
@@ -955,18 +981,19 @@ async function handleCleanupLogs(button) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const cleanupLogsBtnDriver = document.getElementById('cleanupLogsBtnDriver');
-  const cleanupLogsBtnPersonel = document.getElementById('cleanupLogsBtnPersonel');
+// NOT: app.js, index.html'in en altında defer/async OLMADAN yükleniyor; bu noktada DOM zaten
+// hazır ve 'DOMContentLoaded' olayı çoktan ateşlenmiş oluyor. O yüzden bu olayı beklemek yerine
+// doğrudan wire ediyoruz (dosyanın geri kalanındaki diğer tüm element referansları da aynı şekilde).
+const cleanupLogsBtnDriver = document.getElementById('cleanupLogsBtnDriver');
+const cleanupLogsBtnPersonel = document.getElementById('cleanupLogsBtnPersonel');
 
-  if (cleanupLogsBtnDriver) {
-    cleanupLogsBtnDriver.addEventListener('click', () => handleCleanupLogs(cleanupLogsBtnDriver));
-  }
+if (cleanupLogsBtnDriver) {
+  cleanupLogsBtnDriver.addEventListener('click', () => handleCleanupLogs(cleanupLogsBtnDriver));
+}
 
-  if (cleanupLogsBtnPersonel) {
-    cleanupLogsBtnPersonel.addEventListener('click', () => handleCleanupLogs(cleanupLogsBtnPersonel));
-  }
-});
+if (cleanupLogsBtnPersonel) {
+  cleanupLogsBtnPersonel.addEventListener('click', () => handleCleanupLogs(cleanupLogsBtnPersonel));
+}
 
 shareLocationBtn.addEventListener('click', () => {
   if (!state.selectedServiceId) {
