@@ -687,7 +687,11 @@ function getLocationMapEmbedUrl(latitude, longitude) {
   const lat = Number(latitude);
   const lon = Number(longitude);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
-  return `https://maps.google.com/maps?q=${encodeURIComponent(`${lat},${lon}`)}&z=15&output=embed`;
+  const minLat = lat - 0.006;
+  const maxLat = lat + 0.006;
+  const minLon = lon - 0.007;
+  const maxLon = lon + 0.007;
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${minLon}%2C${minLat}%2C${maxLon}%2C${maxLat}&layer=mapnik&marker=${lat}%2C${lon}`;
 }
 
 function renderNotifications() {
