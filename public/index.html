@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>OYAK SERVİS | Servis Takip</title>
-    <link rel="stylesheet" href="/styles.css?v=oyak-20260829-1" />
+    <link rel="stylesheet" href="/styles.css?v=oyak-20260829-2" />
   </head>
   <body>
     <div id="globalLoading" class="global-loading" role="status" aria-live="polite" aria-label="Sayfa yükleniyor">
@@ -238,7 +238,9 @@
           <button id="locationModalCloseBtn" type="button" class="secondary-button">Kapat</button>
         </div>
         <div id="locationModalMeta" class="location-modal-meta"></div>
-        <img id="locationMapImage" class="location-map-frame" alt="Konum haritası" />
+        <div id="locationModalStatus" class="location-modal-status" hidden></div>
+        <iframe id="locationMapImage" class="location-map-frame" title="Konum haritası" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a id="locationModalExternalLink" class="location-modal-external" href="#" target="_blank" rel="noopener noreferrer">Haritayı OpenStreetMap'te aç</a>
       </div>
     </div>
     <div id="memberEditModal" class="modal" hidden>
@@ -258,6 +260,6 @@
       </form>
     </div>
 
-    <script src="/app.js?v=oyak-20260829-1"></script>
+    <script src="/app.js?v=oyak-20260829-2"></script>
   </body>
 </html>

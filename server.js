@@ -421,7 +421,7 @@ app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://staticmap.openstreetmap.de https://*.openstreetmap.org https://tile.openstreetmap.org; connect-src 'self' https://nominatim.openstreetmap.org https://*.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; frame-src 'self' https://www.openstreetmap.org https://*.openstreetmap.org; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.openstreetmap.org https://tile.openstreetmap.org; connect-src 'self' https://nominatim.openstreetmap.org https://*.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; frame-src 'self' https://www.openstreetmap.org https://*.openstreetmap.org; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'");
   if (IS_PRODUCTION) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
 });

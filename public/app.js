@@ -75,8 +75,11 @@ const memberEditSaveBtn = document.getElementById('memberEditSaveBtn');
 const toastContainer = document.getElementById('toastContainer');
 const locationModal = document.getElementById('locationModal');
 const locationModalMeta = document.getElementById('locationModalMeta');
+const locationModalStatus = document.getElementById('locationModalStatus');
 const locationMapImage = document.getElementById('locationMapImage');
+const locationModalExternalLink = document.getElementById('locationModalExternalLink');
 const locationModalCloseBtn = document.getElementById('locationModalCloseBtn');
+let locationMapLoadTimer = null;
 const shareLocationBtn = document.getElementById('shareLocationBtn');
 const requestLocationBtn = document.getElementById('requestLocationBtn');
 const driverStatusBox = document.getElementById('driverStatusBox');
@@ -692,7 +695,15 @@ function getLocationMapEmbedUrl(latitude, longitude) {
   const lat = Number(latitude);
   const lon = Number(longitude);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
-  return `https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lon}&zoom=15&size=800x500&markers=${lat},${lon},red-pushpin`;
+
+  const latSpan = 0.006;
+  const lonSpan = 0.008;
+  const minLat = Math.max(-90, lat - latSpan / 2);
+  const maxLat = Math.min(90, lat + latSpan / 2);
+  const minLon = Math.max(-180, lon - lonSpan / 2);
+  const maxLon = Math.min(180, lon + lonSpan / 2);
+
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${minLon}%2C${minLat}%2C${maxLon}%2C${maxLat}&layer=mapnik&marker=${lat}%2C${lon}`;
 }
 
 function renderNotifications() {
@@ -724,28 +735,72 @@ function renderNotifications() {
   }).join('');
 }
 
+function setLocationModalStatus(message) {
+  if (!locationModalStatus) return;
+  if (message) {
+    locationModalStatus.textContent = message;
+    locationModalStatus.hidden = false;
+  } else {
+    locationModalStatus.textContent = '';
+    locationModalStatus.hidden = true;
+  }
+}
+
 function openLocationMap(item) {
-  if (!item || !item.coordinates) return;
+  if (!item || !item.coordinates) {
+    showToast('Bu bildirim için konum verisi bulunamadı.', 'error');
+    return;
+  }
   const url = getLocationMapEmbedUrl(item.coordinates.latitude, item.coordinates.longitude);
-  if (!url) return;
+  if (!url) {
+    showToast('Konum verisi geçersiz, harita gösterilemiyor.', 'error');
+    return;
+  }
+
+  const externalUrl = `https://www.openstreetmap.org/?mlat=${item.coordinates.latitude}&mlon=${item.coordinates.longitude}#map=17/${item.coordinates.latitude}/${item.coordinates.longitude}`;
 
   state.activeLocationMapId = item.id || null;
+  setLocationModalStatus('');
+  locationModalExternalLink.href = externalUrl;
+
+  if (locationMapLoadTimer) window.clearTimeout(locationMapLoadTimer);
+  locationMapLoadTimer = window.setTimeout(() => {
+    setLocationModalStatus('Harita yüklenemedi. Ağınız veya tarayıcınız üçüncü taraf haritaları engelliyor olabilir — aşağıdaki bağlantıyla açabilirsiniz.');
+  }, 5000);
+
+  locationMapImage.onload = () => {
+    if (locationMapLoadTimer) window.clearTimeout(locationMapLoadTimer);
+    setLocationModalStatus('');
+  };
+  locationMapImage.onerror = () => {
+    if (locationMapLoadTimer) window.clearTimeout(locationMapLoadTimer);
+    setLocationModalStatus('Harita yüklenemedi. Aşağıdaki bağlantıyla açabilirsiniz.');
+  };
+
   locationMapImage.src = url;
   locationModalMeta.textContent = `${item.locationLabel || getNotificationLocationText(item) || 'Konum'} • ${new Date(item.createdAt || Date.now()).toLocaleString('tr-TR')}`;
   locationModal.hidden = false;
 }
 
 function closeLocationMap() {
+  if (locationMapLoadTimer) {
+    window.clearTimeout(locationMapLoadTimer);
+    locationMapLoadTimer = null;
+  }
   state.activeLocationMapId = null;
   locationModal.hidden = true;
   locationMapImage.removeAttribute('src');
   locationModalMeta.textContent = '';
+  setLocationModalStatus('');
 }
 
 function toggleLocationMap(notificationId) {
   if (!notificationId) return;
   const item = state.notifications.find((entry) => entry.id === notificationId);
-  if (!item) return;
+  if (!item) {
+    showToast('Bu bildirim artık mevcut değil, sayfayı yenileyip tekrar deneyin.', 'error');
+    return;
+  }
   if (!locationModal.hidden && state.activeLocationMapId === notificationId) {
     closeLocationMap();
     return;
