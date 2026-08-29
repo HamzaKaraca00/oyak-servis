@@ -748,8 +748,45 @@ button:disabled {
   height: min(58vh, 420px);
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.06);
   display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-tile {
+  position: absolute;
+  width: 256px;
+  height: 256px;
+  top: 0;
+  left: 0;
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.map-marker {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -100%);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+
+.map-attribution {
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  font-size: 10px;
+  line-height: 1.3;
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 1px 5px;
+  border-radius: 4px;
+  pointer-events: none;
 }
 
 .location-modal-status {

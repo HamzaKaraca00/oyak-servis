@@ -79,7 +79,6 @@ const locationModalStatus = document.getElementById('locationModalStatus');
 const locationMapImage = document.getElementById('locationMapImage');
 const locationModalExternalLink = document.getElementById('locationModalExternalLink');
 const locationModalCloseBtn = document.getElementById('locationModalCloseBtn');
-let locationMapLoadTimer = null;
 const shareLocationBtn = document.getElementById('shareLocationBtn');
 const requestLocationBtn = document.getElementById('requestLocationBtn');
 const driverStatusBox = document.getElementById('driverStatusBox');
@@ -691,19 +690,77 @@ function getNotificationLocationText(item) {
   return '';
 }
 
-function getLocationMapEmbedUrl(latitude, longitude) {
+// Renders the location as plain <img> map tiles instead of an <iframe> embed.
+// Safari (especially in standalone/home-screen PWA mode) and some in-app/WebView
+// browsers are unreliable at rendering cross-origin iframes, silently showing a
+// blank box with no error — but a plain <img> loads the same way everywhere,
+// so this avoids that whole class of browser-specific failures.
+const MAP_TILE_SIZE = 256;
+const MAP_ZOOM = 16;
+
+function lonLatToWorldPixel(lat, lon, zoom) {
+  const scale = MAP_TILE_SIZE * Math.pow(2, zoom);
+  const x = ((lon + 180) / 360) * scale;
+  const sinLat = Math.sin((lat * Math.PI) / 180);
+  const y = (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale;
+  return { x, y };
+}
+
+function renderStaticMap(container, latitude, longitude, zoom = MAP_ZOOM) {
   const lat = Number(latitude);
   const lon = Number(longitude);
-  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
+  if (!container || !Number.isFinite(lat) || !Number.isFinite(lon)) return false;
 
-  const latSpan = 0.006;
-  const lonSpan = 0.008;
-  const minLat = Math.max(-90, lat - latSpan / 2);
-  const maxLat = Math.min(90, lat + latSpan / 2);
-  const minLon = Math.max(-180, lon - lonSpan / 2);
-  const maxLon = Math.min(180, lon + lonSpan / 2);
+  const width = container.clientWidth || 320;
+  const height = container.clientHeight || 220;
+  const center = lonLatToWorldPixel(lat, lon, zoom);
+  const originX = center.x - width / 2;
+  const originY = center.y - height / 2;
+  const tileCountAxis = Math.pow(2, zoom);
 
-  return `https://www.openstreetmap.org/export/embed.html?bbox=${minLon}%2C${minLat}%2C${maxLon}%2C${maxLat}&layer=mapnik&marker=${lat}%2C${lon}`;
+  const tileXStart = Math.floor(originX / MAP_TILE_SIZE);
+  const tileXEnd = Math.floor((originX + width) / MAP_TILE_SIZE);
+  const tileYStart = Math.floor(originY / MAP_TILE_SIZE);
+  const tileYEnd = Math.floor((originY + height) / MAP_TILE_SIZE);
+
+  container.innerHTML = '';
+  let expectedTiles = 0;
+  let failedTiles = 0;
+
+  for (let ty = tileYStart; ty <= tileYEnd; ty += 1) {
+    if (ty < 0 || ty >= tileCountAxis) continue;
+    for (let tx = tileXStart; tx <= tileXEnd; tx += 1) {
+      const wrappedX = ((tx % tileCountAxis) + tileCountAxis) % tileCountAxis;
+      const img = document.createElement('img');
+      img.className = 'map-tile';
+      img.alt = '';
+      img.loading = 'eager';
+      img.style.left = `${tx * MAP_TILE_SIZE - originX}px`;
+      img.style.top = `${ty * MAP_TILE_SIZE - originY}px`;
+      img.src = `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${ty}.png`;
+      expectedTiles += 1;
+      img.addEventListener('error', () => {
+        failedTiles += 1;
+        img.style.visibility = 'hidden';
+        if (failedTiles >= expectedTiles) {
+          setLocationModalStatus('Harita karoları yüklenemedi. Aşağıdaki bağlantıyla açabilirsiniz.');
+        }
+      });
+      container.appendChild(img);
+    }
+  }
+
+  const marker = document.createElement('div');
+  marker.className = 'map-marker';
+  marker.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C7.03 0 3 4.03 3 9c0 6.5 9 15 9 15s9-8.5 9-15c0-4.97-4.03-9-9-9z" fill="#e30613"/><circle cx="12" cy="9" r="3.4" fill="#ffffff"/></svg>';
+  container.appendChild(marker);
+
+  const attribution = document.createElement('div');
+  attribution.className = 'map-attribution';
+  attribution.textContent = '© OpenStreetMap katkıda bulunanlar';
+  container.appendChild(attribution);
+
+  return true;
 }
 
 function renderNotifications() {
@@ -715,14 +772,18 @@ function renderNotifications() {
   notificationList.innerHTML = state.notifications.map((item) => {
     const hasGeocodedLocationMessage = /Konum paylaşıldı:\s*.+/i.test(String(item.message || ''));
     const locationText = hasGeocodedLocationMessage ? '' : getNotificationLocationText(item);
-    const locationMapUrl = item.coordinates ? getLocationMapEmbedUrl(item.coordinates.latitude, item.coordinates.longitude) : '';
+    const hasLocationMap = Boolean(
+      item.coordinates
+      && Number.isFinite(Number(item.coordinates.latitude))
+      && Number.isFinite(Number(item.coordinates.longitude))
+    );
 
     return `
       <li>
         <strong>${escapeHtml(item.label || 'Servis Bildirimi')}</strong>
         <div>${escapeHtml(item.message || 'Güncelleme var.')}</div>
         ${locationText ? `<div>Konum: ${escapeHtml(locationText)}</div>` : ''}
-        ${locationMapUrl ? `
+        ${hasLocationMap ? `
           <div class="location-map-actions">
             <button type="button" class="location-map-toggle" data-location-toggle-id="${escapeHtml(item.id)}">
               Konumu Gör
@@ -751,45 +812,32 @@ function openLocationMap(item) {
     showToast('Bu bildirim için konum verisi bulunamadı.', 'error');
     return;
   }
-  const url = getLocationMapEmbedUrl(item.coordinates.latitude, item.coordinates.longitude);
-  if (!url) {
+  const { latitude, longitude } = item.coordinates;
+  if (!Number.isFinite(Number(latitude)) || !Number.isFinite(Number(longitude))) {
     showToast('Konum verisi geçersiz, harita gösterilemiyor.', 'error');
     return;
   }
 
-  const externalUrl = `https://www.openstreetmap.org/?mlat=${item.coordinates.latitude}&mlon=${item.coordinates.longitude}#map=17/${item.coordinates.latitude}/${item.coordinates.longitude}`;
+  const externalUrl = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=17/${latitude}/${longitude}`;
 
   state.activeLocationMapId = item.id || null;
   setLocationModalStatus('');
   locationModalExternalLink.href = externalUrl;
-
-  if (locationMapLoadTimer) window.clearTimeout(locationMapLoadTimer);
-  locationMapLoadTimer = window.setTimeout(() => {
-    setLocationModalStatus('Harita yüklenemedi. Ağınız veya tarayıcınız üçüncü taraf haritaları engelliyor olabilir — aşağıdaki bağlantıyla açabilirsiniz.');
-  }, 5000);
-
-  locationMapImage.onload = () => {
-    if (locationMapLoadTimer) window.clearTimeout(locationMapLoadTimer);
-    setLocationModalStatus('');
-  };
-  locationMapImage.onerror = () => {
-    if (locationMapLoadTimer) window.clearTimeout(locationMapLoadTimer);
-    setLocationModalStatus('Harita yüklenemedi. Aşağıdaki bağlantıyla açabilirsiniz.');
-  };
-
-  locationMapImage.src = url;
   locationModalMeta.textContent = `${item.locationLabel || getNotificationLocationText(item) || 'Konum'} • ${new Date(item.createdAt || Date.now()).toLocaleString('tr-TR')}`;
   locationModal.hidden = false;
+
+  // Wait a frame so the modal has finished laying out before we measure its
+  // width/height to size the map tiles — otherwise clientWidth/Height can
+  // read as 0 while the element is still display:none.
+  window.requestAnimationFrame(() => {
+    renderStaticMap(locationMapImage, latitude, longitude);
+  });
 }
 
 function closeLocationMap() {
-  if (locationMapLoadTimer) {
-    window.clearTimeout(locationMapLoadTimer);
-    locationMapLoadTimer = null;
-  }
   state.activeLocationMapId = null;
   locationModal.hidden = true;
-  locationMapImage.removeAttribute('src');
+  locationMapImage.innerHTML = '';
   locationModalMeta.textContent = '';
   setLocationModalStatus('');
 }

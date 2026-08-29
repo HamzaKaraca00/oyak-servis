@@ -421,7 +421,12 @@ app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.openstreetmap.org https://tile.openstreetmap.org; connect-src 'self' https://nominatim.openstreetmap.org https://*.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; frame-src 'self' https://www.openstreetmap.org https://*.openstreetmap.org; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'");
+  // Location previews render as plain <img> map tiles (see renderStaticMap in
+  // app.js) rather than an <iframe> embed of openstreetmap.org — Safari
+  // (especially standalone/home-screen PWA mode) and some in-app browsers are
+  // unreliable at rendering cross-origin iframes. That means frame-src no
+  // longer needs to allow openstreetmap.org; img-src already covers the tiles.
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.openstreetmap.org https://tile.openstreetmap.org; connect-src 'self' https://nominatim.openstreetmap.org https://*.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; frame-src 'self'; frame-ancestors 'none'; form-action 'self'; manifest-src 'self'");
   if (IS_PRODUCTION) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
 });
