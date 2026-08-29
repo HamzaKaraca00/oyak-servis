@@ -5,7 +5,8 @@ const state = {
   selectedServiceId: null,
   notifications: [],
   seenNotificationIds: new Set(),
-  notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false'
+  notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false',
+  expandedLocationMapIds: new Set()
 };
 
 const globalLoading = document.getElementById('globalLoading');
@@ -180,7 +181,7 @@ async function pollForUpdates() {
   }
 }
 
-function handleIncomingNotification(payload) {
+async function handleIncomingNotification(payload) {
   if (!state.user) return;
   if (payload.serviceId && state.selectedServiceId && payload.serviceId !== state.selectedServiceId) return;
 
@@ -192,11 +193,13 @@ function handleIncomingNotification(payload) {
     return;
   }
 
+  const locationLabel = payload.locationLabel || (payload.coordinates ? await resolveLocationLabel(payload.coordinates.latitude, payload.coordinates.longitude) : '');
   const normalized = {
     id: payload.id,
     label: payload.label || 'Servis Bildirimi',
     message: payload.message || 'Yeni bildirim',
     coordinates: payload.coordinates,
+    locationLabel,
     createdAt: payload.createdAt || new Date().toISOString()
   };
 
@@ -550,20 +553,116 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
+function formatCoordinateFallback(latitude, longitude) {
+  const lat = Number(latitude);
+  const lon = Number(longitude);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
+  return `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+}
+
+async function resolveLocationLabel(latitude, longitude) {
+  const lat = Number(latitude);
+  const lon = Number(longitude);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
+
+  try {
+    const url = new URL('https://nominatim.openstreetmap.org/reverse');
+    url.search = new URLSearchParams({
+      format: 'jsonv2',
+      lat: String(lat),
+      lon: String(lon),
+      zoom: '18',
+      addressdetails: '1',
+      'accept-language': 'tr'
+    }).toString();
+
+    const response = await fetch(url, {
+      headers: {
+        'Accept-Language': 'tr'
+      }
+    });
+
+    if (!response.ok) return '';
+    const data = await response.json();
+    const address = data?.address || {};
+    const parts = [
+      address.neighbourhood,
+      address.quarter,
+      address.suburb,
+      address.district,
+      address.city,
+      address.town,
+      address.village,
+      address.county,
+      address.province,
+      address.state
+    ].filter((value) => typeof value === 'string' && value.trim());
+
+    const locationLabel = [...new Set(parts.map((value) => value.trim()))].slice(0, 5).join(', ');
+    return locationLabel || data?.display_name?.split(',').slice(0, 3).join(', ') || '';
+  } catch (error) {
+    return '';
+  }
+}
+
+function getNotificationLocationText(item) {
+  if (!item) return '';
+  if (item.locationLabel) return item.locationLabel;
+  if (item.coordinates) {
+    const fallback = formatCoordinateFallback(item.coordinates.latitude, item.coordinates.longitude);
+    return fallback || 'Konum bilgisi';
+  }
+  const match = String(item.message || '').match(/Konum paylaşıldı:\s*(.+)$/i);
+  if (match && match[1]) return match[1].trim();
+  return '';
+}
+
+function getLocationMapEmbedUrl(latitude, longitude) {
+  const lat = Number(latitude);
+  const lon = Number(longitude);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
+  return `https://www.google.com/maps?q=${encodeURIComponent(`${lat},${lon}`)}&z=15&output=embed`;
+}
+
 function renderNotifications() {
   if (!state.notifications.length) {
     notificationList.innerHTML = '<li>Henüz bildirim alınmadı.</li>';
     return;
   }
 
-  notificationList.innerHTML = state.notifications.map((item) => `
-    <li>
-      <strong>${escapeHtml(item.label || 'Servis Bildirimi')}</strong>
-      <div>${escapeHtml(item.message || 'Güncelleme var.')}</div>
-      ${item.coordinates ? `<div>Konum: ${escapeHtml(item.coordinates.latitude.toFixed(4))}, ${escapeHtml(item.coordinates.longitude.toFixed(4))}</div>` : ''}
-      <small>${escapeHtml(new Date(item.createdAt).toLocaleString('tr-TR'))}</small>
-    </li>
-  `).join('');
+  notificationList.innerHTML = state.notifications.map((item) => {
+    const hasGeocodedLocationMessage = /Konum paylaşıldı:\s*.+/i.test(String(item.message || ''));
+    const locationText = hasGeocodedLocationMessage ? '' : getNotificationLocationText(item);
+    const locationMapUrl = item.coordinates ? getLocationMapEmbedUrl(item.coordinates.latitude, item.coordinates.longitude) : '';
+    const shouldShowMap = Boolean(locationMapUrl && state.expandedLocationMapIds.has(item.id));
+
+    return `
+      <li>
+        <strong>${escapeHtml(item.label || 'Servis Bildirimi')}</strong>
+        <div>${escapeHtml(item.message || 'Güncelleme var.')}</div>
+        ${locationText ? `<div>Konum: ${escapeHtml(locationText)}</div>` : ''}
+        ${locationMapUrl ? `
+          <div class="location-map-actions">
+            <button type="button" class="location-map-toggle" data-location-toggle-id="${escapeHtml(item.id)}">
+              ${shouldShowMap ? 'Haritayı Kapat' : 'Konumu Gör'}
+            </button>
+          </div>
+          ${shouldShowMap ? `<div class="location-map-wrap"><iframe class="location-map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${locationMapUrl}" allowfullscreen></iframe></div>` : ''}
+        ` : ''}
+        <small>${escapeHtml(new Date(item.createdAt).toLocaleString('tr-TR'))}</small>
+      </li>
+    `;
+  }).join('');
+}
+
+function toggleLocationMap(notificationId) {
+  if (!notificationId) return;
+  if (state.expandedLocationMapIds.has(notificationId)) {
+    state.expandedLocationMapIds.delete(notificationId);
+  } else {
+    state.expandedLocationMapIds.add(notificationId);
+  }
+  renderNotifications();
 }
 
 // Admin paneli, personel/sürücü tarafındaki 3 saniyelik bildirim polling'inden ayrı olarak
@@ -793,6 +892,12 @@ serviceOptionList.addEventListener('click', (event) => {
 });
 
 document.addEventListener('click', (event) => {
+  const locationToggle = event.target.closest('[data-location-toggle-id]');
+  if (locationToggle) {
+    toggleLocationMap(locationToggle.dataset.locationToggleId);
+    return;
+  }
+
   if (!event.target.closest('.service-panel')) {
     serviceOptionList.hidden = true;
   }
@@ -1027,13 +1132,19 @@ shareLocationBtn.addEventListener('click', () => {
     };
 
     try {
+      const locationLabel = await resolveLocationLabel(coordinates.latitude, coordinates.longitude);
+      const message = locationLabel
+        ? `Konum paylaşıldı: ${locationLabel}`
+        : `Konum paylaşıldı: ${formatCoordinateFallback(coordinates.latitude, coordinates.longitude)}`;
+
       await sendNotification({
         serviceId: state.selectedServiceId,
         type: 'driver_location',
         label: 'Canlı Konum',
         senderName: state.user?.name || 'Sürücü',
         coordinates,
-        message: `Konum paylaşıldı: ${coordinates.latitude.toFixed(4)}, ${coordinates.longitude.toFixed(4)}`
+        locationLabel,
+        message
       });
       driverStatusBox.textContent = `Canlı konum paylaşıldı • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
       showToast('Konum bilgisi gönderildi.');

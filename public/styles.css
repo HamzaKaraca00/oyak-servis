@@ -684,6 +684,36 @@ button:disabled {
   color: var(--muted);
 }
 
+.location-map-actions {
+  margin-top: 10px;
+}
+
+.location-map-toggle {
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.location-map-wrap {
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.location-map-frame {
+  display: block;
+  width: 100%;
+  height: 180px;
+  border: 0;
+  min-width: 0;
+}
+
 .notification-list.compact {
   margin-top: 12px;
 }
