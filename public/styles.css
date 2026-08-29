@@ -714,6 +714,44 @@ button:disabled {
   min-width: 0;
 }
 
+.location-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.location-modal[hidden] {
+  display: none;
+}
+
+.location-modal-card {
+  width: min(700px, 92vw);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.location-modal-meta {
+  margin: 10px 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#locationMapImage {
+  width: 100%;
+  height: min(58vh, 420px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  object-fit: cover;
+}
+
 .notification-list.compact {
   margin-top: 12px;
 }

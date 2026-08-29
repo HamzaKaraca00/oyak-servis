@@ -6,7 +6,8 @@ const state = {
   notifications: [],
   seenNotificationIds: new Set(),
   notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false',
-  expandedLocationMapIds: new Set()
+  expandedLocationMapIds: new Set(),
+  activeLocationMapId: null
 };
 
 const globalLoading = document.getElementById('globalLoading');
@@ -72,6 +73,10 @@ const memberEditModal = document.getElementById('memberEditModal');
 const memberEditForm = document.getElementById('memberEditForm');
 const memberEditSaveBtn = document.getElementById('memberEditSaveBtn');
 const toastContainer = document.getElementById('toastContainer');
+const locationModal = document.getElementById('locationModal');
+const locationModalMeta = document.getElementById('locationModalMeta');
+const locationMapImage = document.getElementById('locationMapImage');
+const locationModalCloseBtn = document.getElementById('locationModalCloseBtn');
 const shareLocationBtn = document.getElementById('shareLocationBtn');
 const requestLocationBtn = document.getElementById('requestLocationBtn');
 const driverStatusBox = document.getElementById('driverStatusBox');
@@ -687,11 +692,7 @@ function getLocationMapEmbedUrl(latitude, longitude) {
   const lat = Number(latitude);
   const lon = Number(longitude);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return '';
-  const minLat = lat - 0.006;
-  const maxLat = lat + 0.006;
-  const minLon = lon - 0.007;
-  const maxLon = lon + 0.007;
-  return `https://www.openstreetmap.org/export/embed.html?bbox=${minLon}%2C${minLat}%2C${maxLon}%2C${maxLat}&layer=mapnik&marker=${lat}%2C${lon}`;
+  return `https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lon}&zoom=15&size=800x500&markers=${lat},${lon},red-pushpin`;
 }
 
 function renderNotifications() {
@@ -704,7 +705,6 @@ function renderNotifications() {
     const hasGeocodedLocationMessage = /Konum paylaşıldı:\s*.+/i.test(String(item.message || ''));
     const locationText = hasGeocodedLocationMessage ? '' : getNotificationLocationText(item);
     const locationMapUrl = item.coordinates ? getLocationMapEmbedUrl(item.coordinates.latitude, item.coordinates.longitude) : '';
-    const shouldShowMap = Boolean(locationMapUrl && state.expandedLocationMapIds.has(item.id));
 
     return `
       <li>
@@ -714,10 +714,9 @@ function renderNotifications() {
         ${locationMapUrl ? `
           <div class="location-map-actions">
             <button type="button" class="location-map-toggle" data-location-toggle-id="${escapeHtml(item.id)}">
-              ${shouldShowMap ? 'Haritayı Kapat' : 'Konumu Gör'}
+              Konumu Gör
             </button>
           </div>
-          ${shouldShowMap ? `<div class="location-map-wrap"><iframe class="location-map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${locationMapUrl}" allowfullscreen></iframe></div>` : ''}
         ` : ''}
         <small>${escapeHtml(new Date(item.createdAt).toLocaleString('tr-TR'))}</small>
       </li>
@@ -725,14 +724,33 @@ function renderNotifications() {
   }).join('');
 }
 
+function openLocationMap(item) {
+  if (!item || !item.coordinates) return;
+  const url = getLocationMapEmbedUrl(item.coordinates.latitude, item.coordinates.longitude);
+  if (!url) return;
+
+  state.activeLocationMapId = item.id || null;
+  locationMapImage.src = url;
+  locationModalMeta.textContent = `${item.locationLabel || getNotificationLocationText(item) || 'Konum'} • ${new Date(item.createdAt || Date.now()).toLocaleString('tr-TR')}`;
+  locationModal.hidden = false;
+}
+
+function closeLocationMap() {
+  state.activeLocationMapId = null;
+  locationModal.hidden = true;
+  locationMapImage.removeAttribute('src');
+  locationModalMeta.textContent = '';
+}
+
 function toggleLocationMap(notificationId) {
   if (!notificationId) return;
-  if (state.expandedLocationMapIds.has(notificationId)) {
-    state.expandedLocationMapIds.delete(notificationId);
-  } else {
-    state.expandedLocationMapIds.add(notificationId);
+  const item = state.notifications.find((entry) => entry.id === notificationId);
+  if (!item) return;
+  if (!locationModal.hidden && state.activeLocationMapId === notificationId) {
+    closeLocationMap();
+    return;
   }
-  renderNotifications();
+  openLocationMap(item);
 }
 
 // Admin paneli, personel/sürücü tarafındaki 3 saniyelik bildirim polling'inden ayrı olarak
@@ -970,8 +988,20 @@ document.addEventListener('click', (event) => {
     return;
   }
 
+  if (event.target === locationModal) {
+    closeLocationMap();
+    return;
+  }
+
   if (!event.target.closest('.service-panel')) {
     serviceOptionList.hidden = true;
+  }
+});
+
+locationModalCloseBtn.addEventListener('click', closeLocationMap);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !locationModal.hidden) {
+    closeLocationMap();
   }
 });
 
