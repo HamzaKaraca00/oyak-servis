@@ -86,14 +86,27 @@ const staffStatusBox = document.getElementById('staffStatusBox');
 const driverServiceLabel = document.getElementById('driverServiceLabel');
 const staffServiceLabel = document.getElementById('staffServiceLabel');
 const AUTO_LOGIN_DELAY_MS = 3 * 60 * 1000;
-const DRIVER_LOCATION_BROADCAST_MS = 7.5 * 60 * 1000;
+const DRIVER_LOCATION_BROADCAST_MS = 10 * 60 * 1000;
 let liveLocationBroadcastTimer = null;
+let driverBroadcastServiceId = null;
 
 function stopLiveLocationBroadcast() {
   if (liveLocationBroadcastTimer) {
     clearInterval(liveLocationBroadcastTimer);
     liveLocationBroadcastTimer = null;
   }
+  driverBroadcastServiceId = null;
+}
+
+// Only (re)arms the repeating timer — does not send a location itself. Kept
+// separate from startDriverLocationBroadcast so a manual "Canlı Konum Paylaş"
+// send can reset the 10-minute clock without also firing a second, duplicate
+// location update in the same moment.
+function armLiveLocationInterval() {
+  if (liveLocationBroadcastTimer) clearInterval(liveLocationBroadcastTimer);
+  liveLocationBroadcastTimer = window.setInterval(() => {
+    sendDriverLocationUpdate().catch(() => {});
+  }, DRIVER_LOCATION_BROADCAST_MS);
 }
 
 async function sendDriverLocationUpdate() {
@@ -136,6 +149,13 @@ async function sendDriverLocationUpdate() {
 
 async function startDriverLocationBroadcast() {
   if (!state.user || state.user.role !== 'driver' || !navigator.geolocation) return;
+  if (!state.selectedServiceId) return;
+
+  // Idempotent: render() can call this many times per session (login, service
+  // selection, every poll-triggered re-render, etc). Without this guard, each
+  // of those calls would restart the timer AND fire an immediate extra send —
+  // which is exactly what caused the duplicate location broadcasts.
+  if (liveLocationBroadcastTimer && driverBroadcastServiceId === state.selectedServiceId) return;
 
   try {
     if (navigator.permissions && navigator.permissions.query) {
@@ -146,11 +166,9 @@ async function startDriverLocationBroadcast() {
     // Browsers without permission API should still work when geolocation is otherwise allowed.
   }
 
-  stopLiveLocationBroadcast();
+  driverBroadcastServiceId = state.selectedServiceId;
   await sendDriverLocationUpdate();
-  liveLocationBroadcastTimer = window.setInterval(() => {
-    sendDriverLocationUpdate().catch(() => {});
-  }, DRIVER_LOCATION_BROADCAST_MS);
+  armLiveLocationInterval();
 }
 
 function applyTheme(theme) {
@@ -256,7 +274,11 @@ async function pollForUpdates() {
 
 async function handleIncomingNotification(payload) {
   if (!state.user) return;
-  if (payload.serviceId && state.selectedServiceId && payload.serviceId !== state.selectedServiceId) return;
+  // Require an exact serviceId match (not just "match when both are set") so
+  // a notification can never be shown to someone on a different service —
+  // if either side is missing/unknown, treat it as not-a-match rather than
+  // letting it through by default.
+  if (payload.serviceId !== state.selectedServiceId) return;
 
   if (payload.type === 'location_request') {
     if (state.user.role === 'driver') {
@@ -488,7 +510,10 @@ async function loadCurrentUser() {
     const user = await fetchJson('/api/me');
     state.user = user;
     await loadServices();
-    state.selectedServiceId = user.serviceId || state.selectedServiceId;
+    // Always overwrite (never fall back to whatever was already selected) so
+    // a stale selectedServiceId from a previous account on a shared device
+    // can never carry over into this session.
+    state.selectedServiceId = user.serviceId || null;
     renderServiceOptions();
     if (state.selectedServiceId) {
       startPolling();
@@ -887,6 +912,11 @@ function logout() {
   state.user = null;
   state.notifications = [];
   state.seenNotificationIds = new Set();
+  // Clear the selected service so the next login on this device (which may
+  // be a different person, e.g. a shared driver/personel phone) never
+  // inherits this session's service selection.
+  state.selectedServiceId = null;
+  state.activeLocationMapId = null;
   fetchJson('/api/logout', { method: 'POST' }).catch(() => {});
   state.token = '';
   render();
@@ -965,11 +995,13 @@ async function handleLogin(event) {
     state.user = result.user;
     if (payload.rememberMe) localStorage.setItem('rememberedAppOpenedAt', String(Date.now()));
     await loadServices();
-    if (state.user.serviceId) {
-      state.selectedServiceId = state.user.serviceId;
-      renderServiceOptions();
-    }
+    // Always overwrite (not just when truthy) so a stale selectedServiceId
+    // from a previous account on a shared device can never leak into this
+    // session — e.g. logging in as someone with no service yet must not
+    // keep polling whatever service the last logged-in user had selected.
+    state.selectedServiceId = state.user.serviceId || null;
     if (state.selectedServiceId) {
+      renderServiceOptions();
       startPolling();
     }
     render();
@@ -1352,7 +1384,10 @@ shareLocationBtn.addEventListener('click', () => {
         message
       });
       driverStatusBox.textContent = `Canlı konum paylaşıldı • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
-      await startDriverLocationBroadcast();
+      // Reset the periodic broadcast's clock without sending a second,
+      // duplicate location update — we already just sent one above.
+      driverBroadcastServiceId = state.selectedServiceId;
+      armLiveLocationInterval();
       showToast('Konum bilgisi gönderildi.');
     } catch (error) {
       showToast(error.message || 'Konum gönderilemedi.', 'error');
