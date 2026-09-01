@@ -622,14 +622,31 @@ function renderLiveMap() {
 
   const lat = Number(state.liveDriverLocation.latitude);
   const lng = Number(state.liveDriverLocation.longitude);
-  const x = ((lng + 180) / 360) * 100;
-  const y = ((90 - lat) / 180) * 100;
-  const safeX = Math.max(6, Math.min(94, x));
-  const safeY = Math.max(8, Math.min(92, y));
+  const zoom = 15;
+  const tileCount = 2 ** zoom;
+  const normalizedX = (lng + 180) / 360;
+  const latRadians = (lat * Math.PI) / 180;
+  const normalizedY = (1 - Math.asinh(Math.tan(latRadians)) / Math.PI) / 2;
+  const tilePositionX = normalizedX * tileCount;
+  const tilePositionY = normalizedY * tileCount;
+  const centerTileX = Math.floor(tilePositionX);
+  const centerTileY = Math.floor(tilePositionY);
+  const offsetX = (tilePositionX - centerTileX) * 256;
+  const offsetY = (tilePositionY - centerTileY) * 256;
+  const tiles = [];
+
+  for (let yOffset = -1; yOffset <= 1; yOffset += 1) {
+    for (let xOffset = -1; xOffset <= 1; xOffset += 1) {
+      const tileX = (centerTileX + xOffset + tileCount) % tileCount;
+      const tileY = Math.max(0, Math.min(tileCount - 1, centerTileY + yOffset));
+      tiles.push(`<img class="map-tile" src="https://tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png" alt="">`);
+    }
+  }
 
   liveMap.innerHTML = `
-    <div class="map-grid"></div>
-    <div class="map-pin" style="left:${safeX}%; top:${safeY}%" title="Sürücü konumu">🚐</div>
+    <div class="map-tiles" style="transform:translate(calc(-50% - ${offsetX}px), calc(-50% - ${offsetY}px))">${tiles.join('')}</div>
+    <div class="map-pin" title="Sürücü konumu">🚐</div>
+    <small class="map-attribution">© OpenStreetMap katkıcıları</small>
   `;
   liveLocationStatus.textContent = 'Canlı';
   liveLocationInfo.textContent = `Son konum: ${lat.toFixed(4)} / ${lng.toFixed(4)}`;

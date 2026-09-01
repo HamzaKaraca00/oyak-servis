@@ -1,5 +1,5 @@
-const CACHE_NAME = 'payogum-shell-v3';
-const APP_SHELL = ['/', '/index.html', '/styles.css?v=red-theme-4', '/app.js?v=live-location-2', '/manifest.webmanifest', '/icon.svg'];
+const CACHE_NAME = 'payogum-shell-v4';
+const APP_SHELL = ['/', '/index.html', '/styles.css?v=red-theme-4', '/app.js?v=live-location-3', '/manifest.webmanifest', '/icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));

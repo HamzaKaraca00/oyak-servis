@@ -488,11 +488,32 @@ button:disabled {
 .map-grid {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(227, 6, 19, 0.16), rgba(255, 255, 255, 0.02));
+}
+
+.map-tiles {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 768px;
+  height: 768px;
+  display: grid;
+  grid-template-columns: repeat(3, 256px);
+  grid-template-rows: repeat(3, 256px);
+  transform: translate(-50%, -50%);
+  background: #d9e4d0;
+}
+
+.map-tile {
+  display: block;
+  width: 256px;
+  height: 256px;
+  max-width: none;
 }
 
 .map-pin {
   position: absolute;
+  left: 50%;
+  top: 50%;
   display: grid;
   place-items: center;
   width: 44px;
@@ -505,6 +526,16 @@ button:disabled {
   box-shadow: 0 8px 18px rgba(227, 6, 19, 0.48);
   font-size: 24px;
   transform: translate(-2px, -2px);
+}
+
+.map-attribution {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  padding: 2px 4px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #222;
+  font-size: 10px;
 }
 
 .map-placeholder {
