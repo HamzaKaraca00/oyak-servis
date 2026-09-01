@@ -492,7 +492,7 @@ button:disabled {
 }
 
 .live-map-canvas .leaflet-tile {
-  filter: saturate(0.9) brightness(0.95);
+  filter: none;
 }
 
 .map-pin-icon {

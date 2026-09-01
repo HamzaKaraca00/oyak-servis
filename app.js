@@ -617,9 +617,14 @@ function ensureLeafletMap(lat, lng) {
 
   leafletMap = L.map(liveMapCanvas, { attributionControl: true }).setView([lat, lng], 16);
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // CARTO's CDN-backed basemap tends to be reachable on corporate/restricted
+  // networks that sometimes block tile.openstreetmap.org directly. If your
+  // network allows tile.openstreetmap.org fine, you can switch this back to
+  // 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' with no subdomains option.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
     maxZoom: 19,
-    attribution: '© OpenStreetMap katkıcıları'
+    attribution: '© OpenStreetMap katkıcıları © CARTO'
   }).addTo(leafletMap);
 
   const driverIcon = L.divIcon({
