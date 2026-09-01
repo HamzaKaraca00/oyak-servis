@@ -5,6 +5,8 @@ const state = {
   selectedServiceId: null,
   notifications: [],
   liveDriverLocation: null,
+  locationWatchId: null,
+  lastLocationSentAt: 0,
   seenNotificationIds: new Set(),
   notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false'
 };
@@ -46,6 +48,7 @@ let adminReports = [];
 const serviceAdminList = document.getElementById('serviceAdminList');
 const serviceCodeInput = document.getElementById('serviceCodeInput');
 const addServiceBtn = document.getElementById('addServiceBtn');
+const shareLocationBtn = document.getElementById('shareLocationBtn');
 const requestLocationBtn = document.getElementById('requestLocationBtn');
 const driverStatusBox = document.getElementById('driverStatusBox');
 const staffStatusBox = document.getElementById('staffStatusBox');
@@ -116,6 +119,80 @@ function stopPolling() {
   if (pollTimer) {
     clearInterval(pollTimer);
     pollTimer = null;
+  }
+
+  function stopLocationSharing() {
+    if (state.locationWatchId !== null && navigator.geolocation) {
+      navigator.geolocation.clearWatch(state.locationWatchId);
+    }
+    state.locationWatchId = null;
+    if (shareLocationBtn) {
+      shareLocationBtn.textContent = 'Canlı Konumu Başlat';
+      shareLocationBtn.classList.remove('is-success');
+    }
+  }
+
+  async function publishDriverLocation(position) {
+    const now = Date.now();
+    if (state.lastLocationSentAt && now - state.lastLocationSentAt < 5000) return;
+    const coordinates = {
+      latitude: Number(position.coords.latitude.toFixed(6)),
+      longitude: Number(position.coords.longitude.toFixed(6))
+    };
+
+    await sendNotification({
+      serviceId: state.selectedServiceId,
+      type: 'driver_location',
+      label: 'Canlı Konum',
+      coordinates,
+      message: 'Sürücü konumu güncellendi.'
+    });
+    state.lastLocationSentAt = now;
+    driverStatusBox.textContent = `Canlı konum paylaşılıyor • ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`;
+  }
+
+  function startLocationSharing() {
+    if (!state.selectedServiceId) {
+      window.alert('Önce servis seçin.');
+      return;
+    }
+    if (!navigator.geolocation) {
+      window.alert('Bu cihaz konum bilgisini desteklemiyor.');
+      return;
+    }
+    if (state.locationWatchId !== null) return;
+
+    shareLocationBtn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          await publishDriverLocation(position);
+          state.locationWatchId = navigator.geolocation.watchPosition(
+            (nextPosition) => {
+              publishDriverLocation(nextPosition).catch((error) => {
+                driverStatusBox.textContent = error.message || 'Konum güncellenemedi.';
+              });
+            },
+            (error) => {
+              driverStatusBox.textContent = `Konum takibi durdu: ${error.message}`;
+              stopLocationSharing();
+            },
+            { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+          );
+          shareLocationBtn.textContent = 'Canlı Konumu Durdur';
+          shareLocationBtn.classList.add('is-success');
+        } catch (error) {
+          driverStatusBox.textContent = error.message || 'Konum paylaşımı başlatılamadı.';
+        } finally {
+          shareLocationBtn.disabled = false;
+        }
+      },
+      (error) => {
+        shareLocationBtn.disabled = false;
+        driverStatusBox.textContent = `Konum izni gerekli: ${error.message}`;
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+    );
   }
 }
 
@@ -351,8 +428,12 @@ function renderServiceOptionList() {
 function selectService(serviceId) {
   const service = state.services.find((entry) => entry.id === serviceId);
   if (!service) return;
+  if (state.selectedServiceId !== service.id) {
+    stopLocationSharing();
+  }
   state.selectedServiceId = service.id;
   state.liveDriverLocation = null;
+  state.lastLocationSentAt = 0;
   serviceSelect.value = `Servis ${escapeHtml(service.code)}`;
   serviceOptionList.hidden = true;
   updateSelectedServiceLabel();
@@ -582,11 +663,13 @@ async function clearNotificationHistory() {
 }
 
 function logout() {
+  stopLocationSharing();
   stopPolling();
   localStorage.removeItem('rememberedAppOpenedAt');
   state.user = null;
   state.notifications = [];
   state.liveDriverLocation = null;
+  state.lastLocationSentAt = 0;
   state.seenNotificationIds = new Set();
   fetchJson('/api/logout', { method: 'POST' }).catch(() => {});
   state.token = '';
@@ -826,6 +909,14 @@ requestLocationBtn.addEventListener('click', async () => {
 });
 
 clearHistoryBtn.addEventListener('click', clearNotificationHistory);
+shareLocationBtn.addEventListener('click', () => {
+  if (state.locationWatchId === null) {
+    startLocationSharing();
+  } else {
+    stopLocationSharing();
+    driverStatusBox.textContent = 'Canlı konum paylaşımı durduruldu.';
+  }
+});
 
 addServiceBtn.addEventListener('click', async () => {
   if (state.user?.role !== 'admin') {

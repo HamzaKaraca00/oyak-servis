@@ -868,10 +868,15 @@ app.get('/api/notifications', requireAuth, async (req, res) => {
 app.post('/api/notifications/clear', requireAuth, async (req, res) => {
   const db = await readDb();
   const notifications = Array.isArray(db.notifications) ? db.notifications : [];
-  const removed = notifications.filter((entry) => entry.userId === req.user.id);
-  db.notifications = notifications.filter((entry) => entry.userId !== req.user.id);
+  const clearedAt = new Date().toISOString();
+  let cleared = 0;
+  db.notifications = notifications.map((entry) => {
+    if (entry.userId !== req.user.id || entry.readAt) return entry;
+    cleared += 1;
+    return { ...entry, readAt: clearedAt };
+  });
   await writeDb(db);
-  return res.json({ cleared: true, removed: removed.length });
+  return res.json({ cleared: true, removed: cleared });
 });
 
 app.patch('/api/notifications/:id/read', requireAuth, async (req, res) => {
