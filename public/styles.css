@@ -107,7 +107,8 @@ button, input, select {
 
 .view.active {
   display: block;
-  animation: viewFadeIn 0.2s ease;
+  opacity: 1;
+  animation: viewFadeIn 0.2s ease both;
 }
 
 @keyframes viewFadeIn {
