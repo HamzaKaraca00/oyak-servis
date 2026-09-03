@@ -9,7 +9,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>Payogum | Servis Takip</title>
-    <link rel="stylesheet" href="/styles.css?v=red-theme-4" />
+    <link rel="stylesheet" href="/styles.css?v=styles-2026.09.03.1" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
   </head>
   <body>
     <div class="app-shell">
@@ -163,7 +169,8 @@
               <span id="liveLocationStatus" class="badge soft">Bekleniyor</span>
             </div>
             <div id="liveMap" class="live-map" aria-live="polite">
-              <div class="map-placeholder">Konum bekleniyor</div>
+              <div id="liveMapCanvas" class="live-map-canvas" hidden></div>
+              <div id="liveMapPlaceholder" class="map-placeholder">Konum bekleniyor</div>
             </div>
             <p id="liveLocationInfo" class="live-location-info">Sürücü konumu henüz paylaşılmadı.</p>
           </div>
@@ -192,6 +199,11 @@
       </section>
     </div>
 
-    <script src="/app.js?v=live-location-3"></script>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="/app.js?v=app-2026.09.03.1"></script>
   </body>
 </html>

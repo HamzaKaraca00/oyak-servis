@@ -37,8 +37,12 @@ const headerTitle = document.getElementById('headerTitle');
 const notificationList = document.getElementById('notificationList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const liveMap = document.getElementById('liveMap');
+const liveMapCanvas = document.getElementById('liveMapCanvas');
+const liveMapPlaceholder = document.getElementById('liveMapPlaceholder');
 const liveLocationStatus = document.getElementById('liveLocationStatus');
 const liveLocationInfo = document.getElementById('liveLocationInfo');
+let leafletMap = null;
+let leafletMarker = null;
 const adminServiceHistoryList = document.getElementById('adminServiceHistoryList');
 const adminStats = document.getElementById('adminStats');
 const adminReportList = document.getElementById('adminReportList');
@@ -221,6 +225,7 @@ async function syncStoredNotifications() {
     }
   } catch (error) {
     // The regular poll will retry after a temporary connection failure.
+    console.error(error);
   }
 }
 
@@ -236,6 +241,7 @@ async function pollForUpdates() {
     }
   } catch (error) {
     // Transient network hiccups shouldn't spam the user with alerts; just skip this cycle.
+    console.error(error);
   }
 }
 
@@ -608,13 +614,43 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
+function ensureLeafletMap(lat, lng) {
+  if (!liveMapCanvas) {
+    console.error('liveMapCanvas bulunamadı');
+    return;
+  }
+  if (leafletMap || typeof L === 'undefined') return;
+
+  leafletMap = L.map(liveMapCanvas, { attributionControl: true }).setView([lat, lng], 16);
+
+  // CARTO's CDN-backed basemap tends to be reachable on corporate/restricted
+  // networks that sometimes block tile.openstreetmap.org directly. If your
+  // network allows tile.openstreetmap.org fine, you can switch this back to
+  // 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' with no subdomains option.
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 19,
+    attribution: '© OpenStreetMap katkıcıları © CARTO'
+  }).addTo(leafletMap);
+
+  const driverIcon = L.divIcon({
+    className: 'map-pin-icon',
+    html: '<span class="map-pin" title="Sürücü konumu">🚐</span>',
+    iconSize: [40, 40],
+    iconAnchor: [20, 20]
+  });
+
+  leafletMarker = L.marker([lat, lng], { icon: driverIcon }).addTo(leafletMap);
+}
+
 function renderLiveMap() {
   if (!liveMap || !state.user || state.user.role !== 'personel') {
     return;
   }
 
   if (!state.liveDriverLocation) {
-    liveMap.innerHTML = '<div class="map-placeholder">Konum bekleniyor</div>';
+    if (liveMapPlaceholder) liveMapPlaceholder.hidden = false;
+    if (liveMapCanvas) liveMapCanvas.hidden = true;
     liveLocationStatus.textContent = 'Bekleniyor';
     liveLocationInfo.textContent = 'Sürücü konumu henüz paylaşılmadı.';
     return;
@@ -622,32 +658,24 @@ function renderLiveMap() {
 
   const lat = Number(state.liveDriverLocation.latitude);
   const lng = Number(state.liveDriverLocation.longitude);
-  const zoom = 15;
-  const tileCount = 2 ** zoom;
-  const normalizedX = (lng + 180) / 360;
-  const latRadians = (lat * Math.PI) / 180;
-  const normalizedY = (1 - Math.asinh(Math.tan(latRadians)) / Math.PI) / 2;
-  const tilePositionX = normalizedX * tileCount;
-  const tilePositionY = normalizedY * tileCount;
-  const centerTileX = Math.floor(tilePositionX);
-  const centerTileY = Math.floor(tilePositionY);
-  const offsetX = (tilePositionX - centerTileX) * 256;
-  const offsetY = (tilePositionY - centerTileY) * 256;
-  const tiles = [];
 
-  for (let yOffset = -1; yOffset <= 1; yOffset += 1) {
-    for (let xOffset = -1; xOffset <= 1; xOffset += 1) {
-      const tileX = (centerTileX + xOffset + tileCount) % tileCount;
-      const tileY = Math.max(0, Math.min(tileCount - 1, centerTileY + yOffset));
-      tiles.push(`<img class="map-tile" src="https://tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png" alt="">`);
-    }
+  if (liveMapPlaceholder) liveMapPlaceholder.hidden = true;
+  if (liveMapCanvas) liveMapCanvas.hidden = false;
+
+  if (!leafletMap) {
+    ensureLeafletMap(lat, lng);
+  } else {
+    leafletMarker.setLatLng([lat, lng]);
+    leafletMap.panTo([lat, lng], { animate: true });
   }
 
-  liveMap.innerHTML = `
-    <div class="map-tiles" style="transform:translate(calc(-50% - ${offsetX}px), calc(-50% - ${offsetY}px))">${tiles.join('')}</div>
-    <div class="map-pin" title="Sürücü konumu">🚐</div>
-    <small class="map-attribution">© OpenStreetMap katkıcıları</small>
-  `;
+  // The map may have been initialized (or shown) while its container had
+  // zero size (e.g. the personel panel was hidden), so Leaflet needs a nudge
+  // to recompute its dimensions once it's actually visible on screen.
+  requestAnimationFrame(() => {
+    if (leafletMap) leafletMap.invalidateSize();
+  });
+
   liveLocationStatus.textContent = 'Canlı';
   liveLocationInfo.textContent = `Son konum: ${lat.toFixed(4)} / ${lng.toFixed(4)}`;
 }
