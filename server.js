@@ -520,10 +520,6 @@ app.post('/api/join-service', requireAuth, async (req, res) => {
   if (userIndex === -1) {
     return res.status(404).json({ message: 'User not found.' });
   }
-  if (!['personel', 'driver'].includes(db.users[userIndex].role)) {
-    return res.status(403).json({ message: 'Bu hesap servis kanalına bağlanamaz.' });
-  }
-
   db.users[userIndex].serviceId = serviceId;
   await writeDb(db);
 
