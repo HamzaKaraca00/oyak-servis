@@ -876,7 +876,9 @@ roleTabButtons.forEach((button) => {
 
 loginForm.addEventListener('submit', handleLogin);
 registerForm.addEventListener('submit', handleRegister);
-joinServiceBtn.addEventListener('click', joinSelectedService);
+if (joinServiceBtn) {
+  joinServiceBtn.addEventListener('click', joinSelectedService);
+}
 logoutBtn.addEventListener('click', logout);
 serviceSelect.addEventListener('focus', renderServiceOptionList);
 serviceSelect.addEventListener('input', renderServiceOptionList);
