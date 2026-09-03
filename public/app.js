@@ -32,6 +32,7 @@ const adminHistoryPanel = document.getElementById('adminHistoryPanel');
 const adminReportPanel = document.getElementById('adminReportPanel');
 const authView = document.getElementById('authView');
 const dashboardView = document.getElementById('dashboardView');
+const appLoading = document.getElementById('appLoading');
 const userBadge = document.getElementById('userBadge');
 const headerTitle = document.getElementById('headerTitle');
 const notificationList = document.getElementById('notificationList');
@@ -774,6 +775,9 @@ function render() {
 
 async function handleLogin(event) {
   event.preventDefault();
+  const submitButton = event.submitter || loginForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.classList.add('is-loading');
   const formData = new FormData(loginForm);
   const payload = {
     sicilNo: formData.get('sicilNo'),
@@ -801,11 +805,17 @@ async function handleLogin(event) {
     render();
   } catch (error) {
     window.alert(error.message || 'Giriş yapılamadı.');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.classList.remove('is-loading');
   }
 }
 
 async function handleRegister(event) {
   event.preventDefault();
+  const submitButton = event.submitter || registerForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.classList.add('is-loading');
   const formData = new FormData(registerForm);
   const payload = {
     name: formData.get('name'),
@@ -828,6 +838,9 @@ async function handleRegister(event) {
     setAuthTab('login');
   } catch (error) {
     window.alert(error.message || 'Kayıt başarısız.');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.classList.remove('is-loading');
   }
 }
 
@@ -1043,10 +1056,9 @@ adminReportDetails.addEventListener('click', async (event) => {
 });
 
 async function init() {
-  await loadServices();
-  setAuthTab('login');
-
   try {
+    setAuthTab('login');
+    await loadServices();
     const rememberedAt = Number(localStorage.getItem('rememberedAppOpenedAt') || 0);
     const canAutoLogin = rememberedAt && Date.now() - rememberedAt >= AUTO_LOGIN_DELAY_MS;
     if (canAutoLogin) await loadCurrentUser();
@@ -1055,6 +1067,13 @@ async function init() {
   } catch (error) {
     state.user = null;
     render();
+  } finally {
+    if (appLoading) {
+      const removeLoading = () => appLoading.remove();
+      appLoading.classList.add('is-hidden');
+      appLoading.addEventListener('transitionend', removeLoading, { once: true });
+      window.setTimeout(removeLoading, 300);
+    }
   }
 }
 

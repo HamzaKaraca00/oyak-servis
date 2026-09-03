@@ -1,7 +1,7 @@
 {
   "name": "payogum-servis-takip",
   "version": "1.0.0",
-  "appVersion": "2026.09.03.2",
+  "appVersion": "2026.09.03.3",
   "description": "Personel ve sürücü canlı servis takip ve bildirim sistemi",
   "main": "server.js",
   "scripts": {
