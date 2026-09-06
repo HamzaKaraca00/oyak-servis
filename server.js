@@ -92,6 +92,94 @@ async function writeDb(db) {
 
 async function ensureSeedData() {
   const db = await readDb();
+  const routeByServiceCode = {
+    '01': 'V. BULVAR / DÖZCÜ',
+    '02': 'V. KPL SPORU / S. PAZARI',
+    '03': 'V. CUMH. GEBELİ',
+    '04': 'V. B. MAH / KARACAY',
+    '05': 'V. YENİ MAH / S. PAZARI',
+    '06': 'V. TOPRAKKALE',
+    '07': 'V. DERE',
+    '08': 'ERZİN',
+    '09': 'V. K. Y. OCAKLI',
+    '10': 'V. MRKZ / İDÇ / TY',
+    '11': 'V. ÇAYLI',
+    '12': 'V. MEZBAHANE',
+    '13': 'V. YOLLAR',
+    '14': 'V. KARAKESME',
+    '15': 'V. RABAT',
+    '16': 'V. Ç. GÜL CAMİ',
+    '17': 'V. SON DURAK / K. BEYAZ',
+    '18': 'ŞEH. ÇEVK',
+    '19': 'BULVAR',
+    '20': 'V. CUMH. SPOR',
+    '21': 'KARACAY / BAŞ. MAH. 7 OCAK',
+    '22': 'KARACAY / BAŞ. MAH.',
+    '23': 'ERZİN / KÖY-K. YİĞ',
+    '24': 'İDÇ / SK',
+    '25': 'MERKEZ / YOLLAR',
+    '26': 'MERKEZ',
+    '27': 'SON DURAK',
+    '28': 'V. ÇAĞLALIK - TOKİ',
+    '29': 'V. KHAN',
+    '30': 'V. BELEN',
+    '31': 'V. ŞEKERE / 400 EVLER',
+    '32': 'V. TOKİ / ESENTEPE / ÇANKAYA',
+    '33': 'V. FCAD / D. PINAR',
+    '34': 'V. AKBAĞLAR / Y. TEPE',
+    '35': 'V. MOD. / AKBAĞLAR',
+    '36': 'V. BEKBELE',
+    '37': 'V. KORUMA',
+    '38': 'V. DENİZCİLER',
+    '39': 'V. DENİZCİLER',
+    '40': 'V. K. YILAN / AZG.',
+    '41': 'KIRIKHAN',
+    '42': 'ARSUZ / MADEM',
+    '43': 'BELEN',
+    '44': 'ÇERTİMAN - YOLLAR',
+    '45': 'KÖRFEZ / YOLLAR',
+    '46': 'V. 400 EVLER YOLLAR',
+    '47': 'CEBİKE TOKİ / ESENTEPE',
+    '48': 'Y. TEPE / D. PINAR',
+    '49': 'AKBAĞLAR',
+    '50': 'BEKBELE',
+    '51': 'DENİZCİLER / A. YOLU',
+    '52': 'OSMANİYE',
+    '53': 'ERZİN',
+    '54': 'DÖRTYOL - PAYAS',
+    '55': 'KUZUCULU TOKİ - DÖRTYOL',
+    '56': 'BEKBELE - DENİZCİLER',
+    '57': 'AKBAĞLAR - MOD. EVLER',
+    '58': 'MODERN EVLER',
+    '59': 'FENER CAD.',
+    '60': 'ARSUZ',
+    '61': 'BELEN - GEDİK',
+    '62': 'DENİZCİLER / SHELL',
+    '69': 'ÇAĞLALIK / KAYAS MEMUR',
+    '70': 'ESENTEPE / ÇANKAYA',
+    '71': 'PIRILIK / MEKAL MEMUR',
+    '72': 'ÇANTAŞA TOKİ - DENİZCİLER',
+    '73': 'MUSTAFA KEMAL',
+    '74': 'V. HÜSEYİN YOLLAR',
+    '75': 'KIRIKHAN YOLLAR',
+    '76': 'KARAAĞAÇ',
+    '77': 'ERZİN',
+    '78': 'V. FAKIUŞAĞI / B. MAH.',
+    '80': 'K. AĞAÇ SAĞ. OCAĞI YÜKS. KUL.',
+    '81': 'MERKEZ',
+    '82': 'K. ANT. TOP. KIZI',
+    '83': 'BELEN YOLLAR 08:00/16:00',
+    '84': 'VARSAK',
+    '85': 'ANT. VATAN / GAZİ K. GİDİŞ',
+    '86': 'YENİ PTT - DÖNMEZ',
+    '87': 'V. DENİZCİLER',
+    '88': 'BEKBELE / DENİZCİLER',
+    '89': 'V. KUZUCULU TOKİ',
+    '90': 'KUZUCULU / YOLLAR',
+    '92': 'KÖRFEZ',
+    '94': 'V. PIRILIK TOKİ - KARAAĞAÇ',
+    '98': 'MERKEZ / PAYAS',
+  };
   const wantedCodes = Array.from({ length: 99 }, (_, index) => String(index + 1).padStart(2, '0'));
   const existingMap = new Map();
 
@@ -109,12 +197,19 @@ async function ensureSeedData() {
         id: `service-${code}`,
         code,
         name: code,
-        route: '',
+        route: routeByServiceCode[code] || '',
         createdAt: new Date().toISOString()
       });
       existingMap.set(code, true);
     }
   }
+
+  services.forEach((service) => {
+    const code = String(service.code || '').padStart(2, '0');
+    if (routeByServiceCode[code] && !service.route) {
+      service.route = routeByServiceCode[code];
+    }
+  });
 
   db.services = services.filter((service) => {
     const code = String(service.code || '').padStart(2, '0');

@@ -293,7 +293,7 @@ function handleIncomingNotification(payload) {
   if (state.user.role === 'personel') {
     const activeService = state.services.find((service) => service.id === state.selectedServiceId);
     staffStatusBox.textContent = activeService
-      ? `Bağlı servis: Servis ${activeService.code} • Son bildirim: ${normalized.label}`
+      ? `Bağlı servis: ${formatServiceLabel(activeService)} • Son bildirim: ${normalized.label}`
       : 'Bildirim alındı.';
   }
 }
@@ -409,9 +409,13 @@ function authHeaders(extra = {}) {
 
 function updateSelectedServiceLabel() {
   const current = state.services.find((service) => service.id === state.selectedServiceId);
-  const label = current ? `Servis ${current.code}` : 'Seçilmemiş';
+  const label = current ? formatServiceLabel(current) : 'Seçilmemiş';
   driverServiceLabel.textContent = label;
   staffServiceLabel.textContent = label;
+}
+
+function formatServiceLabel(service) {
+  return `Servis ${service.code}${service.route ? ` - ${service.route}` : ''}`;
 }
 
 function renderServiceOptions() {
@@ -426,16 +430,16 @@ function renderServiceOptions() {
   }
 
   const current = state.services.find((service) => service.id === state.selectedServiceId);
-  serviceSelect.value = current ? `Servis ${current.code}` : '';
+  serviceSelect.value = current ? formatServiceLabel(current) : '';
   renderServiceOptionList();
   updateSelectedServiceLabel();
 }
 
 function renderServiceOptionList() {
   const query = serviceSelect.value.replace(/^Servis\s*/i, '').trim().toLowerCase();
-  const matches = state.services.filter((service) => String(service.code).toLowerCase().includes(query));
+  const matches = state.services.filter((service) => formatServiceLabel(service).toLowerCase().includes(query));
   serviceOptionList.innerHTML = matches.length
-    ? matches.map((service) => `<button type="button" data-service-id="${escapeHtml(service.id)}">Servis ${escapeHtml(service.code)}</button>`).join('')
+    ? matches.map((service) => `<button type="button" data-service-id="${escapeHtml(service.id)}">${escapeHtml(formatServiceLabel(service))}</button>`).join('')
     : '<span>Servis bulunamadı</span>';
   serviceOptionList.hidden = false;
 }
@@ -449,7 +453,7 @@ function selectService(serviceId) {
   state.selectedServiceId = service.id;
   state.liveDriverLocation = null;
   state.lastLocationSentAt = 0;
-  serviceSelect.value = `Servis ${escapeHtml(service.code)}`;
+  serviceSelect.value = formatServiceLabel(service);
   serviceOptionList.hidden = true;
   updateSelectedServiceLabel();
   startPolling();
@@ -532,7 +536,8 @@ async function loadAdminServices() {
     const services = await fetchJson('/api/services');
     serviceAdminList.innerHTML = services.map((service) => `
       <li class="service-row">
-        <strong>Servis ${escapeHtml(service.code)}</strong>
+        <strong>${escapeHtml(formatServiceLabel(service))}</strong>
+        ${service.route ? `<small class="service-route">${escapeHtml(service.route)}</small>` : ''}
         <div class="service-row-actions">
           <button class="refresh-btn" data-service-id="${escapeHtml(service.id)}" data-code="${escapeHtml(service.code)}">Yenile</button>
           <button class="delete-btn" data-service-id="${escapeHtml(service.id)}">Sil</button>
@@ -749,7 +754,9 @@ function render() {
       driverStatusBox.textContent = 'Lütfen bir servis seçin.';
     } else {
       const activeService = state.services.find((s) => s.id === state.selectedServiceId);
-      driverStatusBox.textContent = `Aktif servis: Servis ${activeService?.code || '00'}`;
+      driverStatusBox.textContent = activeService
+        ? `Aktif servis: ${formatServiceLabel(activeService)}`
+        : 'Aktif servis: Servis 00';
     }
   }
 
@@ -758,7 +765,7 @@ function render() {
     const latestMessage = state.notifications[0];
     if (!state.liveDriverLocation) {
       staffStatusBox.textContent = activeService
-        ? `Bağlı servis: Servis ${activeService.code}${latestMessage ? ` • Son bildirim: ${latestMessage.label}` : ''}`
+        ? `Bağlı servis: ${formatServiceLabel(activeService)}${latestMessage ? ` • Son bildirim: ${latestMessage.label}` : ''}`
         : 'Lütfen bir servis seçin.';
     }
     renderLiveMap();

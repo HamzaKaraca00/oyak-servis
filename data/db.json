@@ -609,6 +609,66 @@
       "role": "personel",
       "serviceId": "service-01",
       "createdAt": "2026-09-03T09:51:49.531Z"
+    },
+    {
+      "id": "21146df1-377a-4ebf-a8af-11646d324b00",
+      "name": "Offline Personel",
+      "phone": "05716914213",
+      "sicilNo": "8716914214",
+      "passwordHash": "$2a$12$W/HC7qxAElyhFYv6Fmqyde.Aqlf0H2TmrrV6mw4eKEoPDGhDbhkkq",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-09-06T17:48:34.491Z"
+    },
+    {
+      "id": "878339e4-33b6-4a5b-b5aa-39853a74565b",
+      "name": "Aynı Servis Personeli",
+      "phone": "05716915268",
+      "sicilNo": "8716915268",
+      "passwordHash": "$2a$12$OnHS8yJ2dpj/QGOwFhxft.XKisxQfV2y7oZcIuGkvvvREr5bXn1IK",
+      "role": "personel",
+      "serviceId": null,
+      "createdAt": "2026-09-06T17:48:35.533Z"
+    },
+    {
+      "id": "ec086c9d-1aca-4617-98ff-26cebd555de8",
+      "name": "Başka Servis Personeli",
+      "phone": "05716916771",
+      "sicilNo": "8716916771",
+      "passwordHash": "$2a$12$0TPnTFzwj.lwt6Fj0MJV9.2wUPJSXazsSeyeRWKi3ajfp5LWCFzQu",
+      "role": "personel",
+      "serviceId": null,
+      "createdAt": "2026-09-06T17:48:35.797Z"
+    },
+    {
+      "id": "14acbed8-f852-4d8e-a904-e44317b8c35f",
+      "name": "Service01 Member",
+      "phone": "05716915819",
+      "sicilNo": "8716915819",
+      "passwordHash": "$2a$12$SRb57t6OnXcX9OtaD7tvxeD36QG29ZYnGM3JFe2H9FKVk.eAMVkce",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-09-06T17:48:36.094Z"
+    },
+    {
+      "id": "dc44d4b5-df7f-4c9d-a429-4cf50e6ebd95",
+      "name": "Service01 Driver",
+      "phone": "05716916623",
+      "sicilNo": "8716916623",
+      "passwordHash": "$2a$12$GDHLt3QwT4BtDiX6QzpgS.IzwacaYi1OAzZ9g0/wtuF4OjhaLhzL.",
+      "role": "driver",
+      "serviceId": "service-01",
+      "createdAt": "2026-09-06T17:48:36.893Z"
+    },
+    {
+      "id": "93b18160-58c3-489a-a964-71840e105148",
+      "name": "Personnel Spoof Attempt",
+      "phone": "05716917421",
+      "sicilNo": "8716917421",
+      "passwordHash": "$2a$12$ToVinMWlWQEvDtUvoZqqHunbKXOwUI4kyMouUeJawUW6cod2G.byG",
+      "role": "personel",
+      "serviceId": "service-01",
+      "createdAt": "2026-09-06T17:48:37.688Z"
     }
   ],
   "services": [
@@ -616,427 +676,427 @@
       "id": "service-01",
       "code": "01",
       "name": "01",
-      "route": "",
+      "route": "V. BULVAR / DÖZCÜ",
       "createdAt": "2026-08-29T11:12:40.974Z"
     },
     {
       "id": "service-02",
       "code": "02",
       "name": "02",
-      "route": "",
+      "route": "V. KPL SPORU / S. PAZARI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-03",
       "code": "03",
       "name": "03",
-      "route": "",
+      "route": "V. CUMH. GEBELİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-04",
       "code": "04",
       "name": "04",
-      "route": "",
+      "route": "V. B. MAH / KARACAY",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-05",
       "code": "05",
       "name": "05",
-      "route": "",
+      "route": "V. YENİ MAH / S. PAZARI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-06",
       "code": "06",
       "name": "06",
-      "route": "",
+      "route": "V. TOPRAKKALE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-08",
       "code": "08",
       "name": "08",
-      "route": "",
+      "route": "ERZİN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-09",
       "code": "09",
       "name": "09",
-      "route": "",
+      "route": "V. K. Y. OCAKLI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-10",
       "code": "10",
       "name": "10",
-      "route": "",
+      "route": "V. MRKZ / İDÇ / TY",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-11",
       "code": "11",
       "name": "11",
-      "route": "",
+      "route": "V. ÇAYLI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-12",
       "code": "12",
       "name": "12",
-      "route": "",
+      "route": "V. MEZBAHANE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-13",
       "code": "13",
       "name": "13",
-      "route": "",
+      "route": "V. YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-14",
       "code": "14",
       "name": "14",
-      "route": "",
+      "route": "V. KARAKESME",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-15",
       "code": "15",
       "name": "15",
-      "route": "",
+      "route": "V. RABAT",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-16",
       "code": "16",
       "name": "16",
-      "route": "",
+      "route": "V. Ç. GÜL CAMİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-17",
       "code": "17",
       "name": "17",
-      "route": "",
+      "route": "V. SON DURAK / K. BEYAZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-18",
       "code": "18",
       "name": "18",
-      "route": "",
+      "route": "ŞEH. ÇEVK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-19",
       "code": "19",
       "name": "19",
-      "route": "",
+      "route": "BULVAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-20",
       "code": "20",
       "name": "20",
-      "route": "",
+      "route": "V. CUMH. SPOR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-21",
       "code": "21",
       "name": "21",
-      "route": "",
+      "route": "KARACAY / BAŞ. MAH. 7 OCAK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-22",
       "code": "22",
       "name": "22",
-      "route": "",
+      "route": "KARACAY / BAŞ. MAH.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-23",
       "code": "23",
       "name": "23",
-      "route": "",
+      "route": "ERZİN / KÖY-K. YİĞ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-24",
       "code": "24",
       "name": "24",
-      "route": "",
+      "route": "İDÇ / SK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-25",
       "code": "25",
       "name": "25",
-      "route": "",
+      "route": "MERKEZ / YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-26",
       "code": "26",
       "name": "26",
-      "route": "",
+      "route": "MERKEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-27",
       "code": "27",
       "name": "27",
-      "route": "",
+      "route": "SON DURAK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-28",
       "code": "28",
       "name": "28",
-      "route": "",
+      "route": "V. ÇAĞLALIK - TOKİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-29",
       "code": "29",
       "name": "29",
-      "route": "",
+      "route": "V. KHAN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-30",
       "code": "30",
       "name": "30",
-      "route": "",
+      "route": "V. BELEN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-31",
       "code": "31",
       "name": "31",
-      "route": "",
+      "route": "V. ŞEKERE / 400 EVLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-32",
       "code": "32",
       "name": "32",
-      "route": "",
+      "route": "V. TOKİ / ESENTEPE / ÇANKAYA",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-33",
       "code": "33",
       "name": "33",
-      "route": "",
+      "route": "V. FCAD / D. PINAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-34",
       "code": "34",
       "name": "34",
-      "route": "",
+      "route": "V. AKBAĞLAR / Y. TEPE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-35",
       "code": "35",
       "name": "35",
-      "route": "",
+      "route": "V. MOD. / AKBAĞLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-36",
       "code": "36",
       "name": "36",
-      "route": "",
+      "route": "V. BEKBELE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-37",
       "code": "37",
       "name": "37",
-      "route": "",
+      "route": "V. KORUMA",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-38",
       "code": "38",
       "name": "38",
-      "route": "",
+      "route": "V. DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-39",
       "code": "39",
       "name": "39",
-      "route": "",
+      "route": "V. DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-40",
       "code": "40",
       "name": "40",
-      "route": "",
+      "route": "V. K. YILAN / AZG.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-41",
       "code": "41",
       "name": "41",
-      "route": "",
+      "route": "KIRIKHAN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-42",
       "code": "42",
       "name": "42",
-      "route": "",
+      "route": "ARSUZ / MADEM",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-43",
       "code": "43",
       "name": "43",
-      "route": "",
+      "route": "BELEN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-44",
       "code": "44",
       "name": "44",
-      "route": "",
+      "route": "ÇERTİMAN - YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-45",
       "code": "45",
       "name": "45",
-      "route": "",
+      "route": "KÖRFEZ / YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-46",
       "code": "46",
       "name": "46",
-      "route": "",
+      "route": "V. 400 EVLER YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-47",
       "code": "47",
       "name": "47",
-      "route": "",
+      "route": "CEBİKE TOKİ / ESENTEPE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-48",
       "code": "48",
       "name": "48",
-      "route": "",
+      "route": "Y. TEPE / D. PINAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-49",
       "code": "49",
       "name": "49",
-      "route": "",
+      "route": "AKBAĞLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-50",
       "code": "50",
       "name": "50",
-      "route": "",
+      "route": "BEKBELE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-51",
       "code": "51",
       "name": "51",
-      "route": "",
+      "route": "DENİZCİLER / A. YOLU",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-52",
       "code": "52",
       "name": "52",
-      "route": "",
+      "route": "OSMANİYE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-53",
       "code": "53",
       "name": "53",
-      "route": "",
+      "route": "ERZİN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-54",
       "code": "54",
       "name": "54",
-      "route": "",
+      "route": "DÖRTYOL - PAYAS",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-55",
       "code": "55",
       "name": "55",
-      "route": "",
+      "route": "KUZUCULU TOKİ - DÖRTYOL",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-56",
       "code": "56",
       "name": "56",
-      "route": "",
+      "route": "BEKBELE - DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-57",
       "code": "57",
       "name": "57",
-      "route": "",
+      "route": "AKBAĞLAR - MOD. EVLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-58",
       "code": "58",
       "name": "58",
-      "route": "",
+      "route": "MODERN EVLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-59",
       "code": "59",
       "name": "59",
-      "route": "",
+      "route": "FENER CAD.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-60",
       "code": "60",
       "name": "60",
-      "route": "",
+      "route": "ARSUZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-61",
       "code": "61",
       "name": "61",
-      "route": "",
+      "route": "BELEN - GEDİK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-62",
       "code": "62",
       "name": "62",
-      "route": "",
+      "route": "DENİZCİLER / SHELL",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1085,70 +1145,70 @@
       "id": "service-69",
       "code": "69",
       "name": "69",
-      "route": "",
+      "route": "ÇAĞLALIK / KAYAS MEMUR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-70",
       "code": "70",
       "name": "70",
-      "route": "",
+      "route": "ESENTEPE / ÇANKAYA",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-71",
       "code": "71",
       "name": "71",
-      "route": "",
+      "route": "PIRILIK / MEKAL MEMUR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-72",
       "code": "72",
       "name": "72",
-      "route": "",
+      "route": "ÇANTAŞA TOKİ - DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-73",
       "code": "73",
       "name": "73",
-      "route": "",
+      "route": "MUSTAFA KEMAL",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-74",
       "code": "74",
       "name": "74",
-      "route": "",
+      "route": "V. HÜSEYİN YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-75",
       "code": "75",
       "name": "75",
-      "route": "",
+      "route": "KIRIKHAN YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-76",
       "code": "76",
       "name": "76",
-      "route": "",
+      "route": "KARAAĞAÇ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-77",
       "code": "77",
       "name": "77",
-      "route": "",
+      "route": "ERZİN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-78",
       "code": "78",
       "name": "78",
-      "route": "",
+      "route": "V. FAKIUŞAĞI / B. MAH.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1162,77 +1222,77 @@
       "id": "service-80",
       "code": "80",
       "name": "80",
-      "route": "",
+      "route": "K. AĞAÇ SAĞ. OCAĞI YÜKS. KUL.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-81",
       "code": "81",
       "name": "81",
-      "route": "",
+      "route": "MERKEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-82",
       "code": "82",
       "name": "82",
-      "route": "",
+      "route": "K. ANT. TOP. KIZI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-83",
       "code": "83",
       "name": "83",
-      "route": "",
+      "route": "BELEN YOLLAR 08:00/16:00",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-84",
       "code": "84",
       "name": "84",
-      "route": "",
+      "route": "VARSAK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-85",
       "code": "85",
       "name": "85",
-      "route": "",
+      "route": "ANT. VATAN / GAZİ K. GİDİŞ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-86",
       "code": "86",
       "name": "86",
-      "route": "",
+      "route": "YENİ PTT - DÖNMEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-87",
       "code": "87",
       "name": "87",
-      "route": "",
+      "route": "V. DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-88",
       "code": "88",
       "name": "88",
-      "route": "",
+      "route": "BEKBELE / DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-89",
       "code": "89",
       "name": "89",
-      "route": "",
+      "route": "V. KUZUCULU TOKİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-90",
       "code": "90",
       "name": "90",
-      "route": "",
+      "route": "KUZUCULU / YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1246,7 +1306,7 @@
       "id": "service-92",
       "code": "92",
       "name": "92",
-      "route": "",
+      "route": "KÖRFEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1260,7 +1320,7 @@
       "id": "service-94",
       "code": "94",
       "name": "94",
-      "route": "",
+      "route": "V. PIRILIK TOKİ - KARAAĞAÇ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1288,7 +1348,7 @@
       "id": "service-98",
       "code": "98",
       "name": "98",
-      "route": "",
+      "route": "MERKEZ / PAYAS",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1302,11 +1362,23 @@
       "id": "service-07",
       "code": "07",
       "name": "07",
-      "route": "",
-      "createdAt": "2026-09-03T09:51:45.243Z"
+      "route": "V. DERE",
+      "createdAt": "2026-09-06T17:48:33.366Z"
     }
   ],
   "logs": [
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z"
+    },
     {
       "id": "4639fddb-d7f8-45d4-b3dc-e00608e66c4c",
       "serviceId": "service-01",
@@ -1576,6 +1648,636 @@
     }
   ],
   "notifications": [
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "81bcfe6b-872e-4a45-8267-c0656d730acb",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "173cd379-40bf-4377-a6d3-0d0c6be8e496",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "5b655297-42d6-4d4a-baca-abdfeb65d422",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "f0ef9d2d-d347-4d9b-ae75-0d53d65885a5",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "c00a4e77-763a-461b-ad9c-93cdb6c01435",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "12fc9539-72ab-469b-85be-fcfb24c01ee4",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "d8a0516c-2292-4cac-bf6f-d53b9fcb974c",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "d7ca1982-061b-4c34-accf-1bb011e8eb64",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "16ec7686-fd4b-421a-966e-7b11484f8b19",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "cb0acd23-fb2f-43bc-9131-2b9dcab99904",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "7f301e6d-a5e6-4d31-821f-247ae5221dc2",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "10ce141f-6655-4614-8183-67f1c33ea46c",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "120f080e-608d-423a-b28d-eeef789cf4be",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "9fec2f19-dbfd-409f-8b74-4983520f201e",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "28694556-d222-484b-a221-1fd943df3247",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "657c5189-0bd2-45cf-954b-3ab2950fdce6",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "7cf3dfd2-cf92-4f6d-b079-8979381b3a6e",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "8f061383-23ed-453f-aa0e-7847d2ece42c",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "92c40d33-9950-4dc0-b413-54b42f791c53",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "7768ed1c-1e3d-4723-855f-4d4d943da1c0",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "66ee4753-840b-4d35-a9ba-66ac4609656b",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "9e6ea65a-70b3-4ba4-8cf3-45d82c63767f",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "1ccdcd31-84f0-4456-9aec-6a4a7c688955",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "c6f6f262-a9f8-47ca-af6c-5a12b67cddf5",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "d6149c95-ff5d-4019-bb3c-a09ff2c42cea",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "c3e0687d-c916-40b1-b5f0-058039264590",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "5374a9ca-a9ca-44b5-aa86-4f717d379c46",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "22fae23a-482d-4fc2-b1af-84a8847ab95c",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "9a2a6377-219d-4b12-9d39-4a2f693cbdd8",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "122908c0-9e7b-4004-b65e-b15024c1b662",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "e26f5bd6-587a-43fd-b02e-d5f89fa8856e",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "03034a4e-73f3-4708-8225-00fac0d6fae0",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "59b14be9-e52d-4940-b8fc-085d412b3ecd",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "4d2b5776-48fd-4376-b346-9a20b2dcc6c5",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "43ecbe21-fd41-486a-88cf-56483e4a04bc",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "62964557-bc5b-4785-8940-a670ec7cf43c",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "29d51804-f9b1-4a5e-8f9f-45fda72cec04",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "3139c6f9-b40b-4d63-b3e1-3640a1debb35",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "db22f60a-94bd-4cc7-a81b-9ae6a7104a58",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "faf847ea-3734-4cb1-9348-c2a7d25241d2",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "e3c46285-fef4-4d06-a925-f9d0e8a0a3a8",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "1c8fe933-4be8-4157-b9b5-2df8e8375e8e",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "6627f4fa-4496-4811-a30b-7905d0e240bd",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "fcc3edc0-729b-4a33-a89d-47eb169078a8",
+      "readAt": null
+    },
+    {
+      "id": "0cfac97c-54b7-4849-b754-41b4512707c1",
+      "serviceId": "service-01",
+      "type": "test",
+      "label": "Test label",
+      "message": "Only service 01 should see this",
+      "senderName": "Test Admin",
+      "senderId": "6e78a8c4-4b22-4f83-bcdf-9bc99c1ceb3b",
+      "idempotencyKey": null,
+      "coordinates": null,
+      "createdAt": "2026-09-06T17:48:33.696Z",
+      "userId": "ac8935ed-3bb7-4c1f-bfdb-bfea3308fdd5",
+      "readAt": null
+    },
     {
       "id": "4639fddb-d7f8-45d4-b3dc-e00608e66c4c",
       "serviceId": "service-01",
