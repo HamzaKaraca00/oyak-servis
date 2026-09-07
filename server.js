@@ -180,6 +180,24 @@ async function ensureSeedData() {
     '94': 'V. PIRILIK TOKİ - KARAAĞAÇ',
     '98': 'MERKEZ / PAYAS',
   };
+  const sectionByServiceCode = {
+    ...Object.fromEntries(['01', '02', '03', '04', '05', '06', '19', '20', '21', '22', '78'].map((code) => [code, 'OSMANİYE'])),
+    ...Object.fromEntries(['07', '08', '09', '23', '77'].map((code) => [code, 'ERZİN'])),
+    ...Object.fromEntries(['10', '11', '24', '89', '90'].map((code) => [code, 'KUZUCULU'])),
+    ...Object.fromEntries(['12', '13', '14', '15', '25', '26', '81', '98'].map((code) => [code, 'DÖRTYOL'])),
+    ...Object.fromEntries(['16', '17', '18', '27', '28'].map((code) => [code, 'PAYAS'])),
+    ...Object.fromEntries(['31', '32', '33', '34', '35', '45', '46', '47', '48', '49', '70', '73', '74', '80', '86'].map((code) => [code, 'İSKENDERUN'])),
+    ...Object.fromEntries(['36', '50', '88'].map((code) => [code, 'BEKBELE/AKÇAY'])),
+    ...Object.fromEntries(['38', '39', '51', '62', '87', '99'].map((code) => [code, 'DENİZCİLER/AKARCA'])),
+    ...Object.fromEntries(['37', '40'].map((code) => [code, 'K. YILAN/AZG.'])),
+    ...Object.fromEntries(['29', '30', '41', '42', '43', '44', '75', '82', '83', '84', '85', '94'].map((code) => [code, 'KIRIKHAN/BELEN'])),
+    ...Object.fromEntries(['52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '63', '64', '65', '66', '67', '68', '69', '71', '72', '76', '79', '91', '92', '93', '95', '96', '97'].map((code) => [code, 'A/U SERVİSLERİ']))
+  };
+  Object.entries(sectionByServiceCode).forEach(([code, section]) => {
+    if (routeByServiceCode[code]) {
+      routeByServiceCode[code] = `${section} - ${routeByServiceCode[code]}`;
+    }
+  });
   const wantedCodes = Array.from({ length: 99 }, (_, index) => String(index + 1).padStart(2, '0'));
   const existingMap = new Map();
 
@@ -206,7 +224,7 @@ async function ensureSeedData() {
 
   services.forEach((service) => {
     const code = String(service.code || '').padStart(2, '0');
-    if (routeByServiceCode[code] && !service.route) {
+    if (routeByServiceCode[code] && service.route !== routeByServiceCode[code]) {
       service.route = routeByServiceCode[code];
     }
   });

@@ -676,427 +676,427 @@
       "id": "service-01",
       "code": "01",
       "name": "01",
-      "route": "V. BULVAR / DÖZCÜ",
+      "route": "OSMANİYE - V. BULVAR / DÖZCÜ",
       "createdAt": "2026-08-29T11:12:40.974Z"
     },
     {
       "id": "service-02",
       "code": "02",
       "name": "02",
-      "route": "V. KPL SPORU / S. PAZARI",
+      "route": "OSMANİYE - V. KPL SPORU / S. PAZARI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-03",
       "code": "03",
       "name": "03",
-      "route": "V. CUMH. GEBELİ",
+      "route": "OSMANİYE - V. CUMH. GEBELİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-04",
       "code": "04",
       "name": "04",
-      "route": "V. B. MAH / KARACAY",
+      "route": "OSMANİYE - V. B. MAH / KARACAY",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-05",
       "code": "05",
       "name": "05",
-      "route": "V. YENİ MAH / S. PAZARI",
+      "route": "OSMANİYE - V. YENİ MAH / S. PAZARI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-06",
       "code": "06",
       "name": "06",
-      "route": "V. TOPRAKKALE",
+      "route": "OSMANİYE - V. TOPRAKKALE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-08",
       "code": "08",
       "name": "08",
-      "route": "ERZİN",
+      "route": "ERZİN - ERZİN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-09",
       "code": "09",
       "name": "09",
-      "route": "V. K. Y. OCAKLI",
+      "route": "ERZİN - V. K. Y. OCAKLI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-10",
       "code": "10",
       "name": "10",
-      "route": "V. MRKZ / İDÇ / TY",
+      "route": "KUZUCULU - V. MRKZ / İDÇ / TY",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-11",
       "code": "11",
       "name": "11",
-      "route": "V. ÇAYLI",
+      "route": "KUZUCULU - V. ÇAYLI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-12",
       "code": "12",
       "name": "12",
-      "route": "V. MEZBAHANE",
+      "route": "DÖRTYOL - V. MEZBAHANE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-13",
       "code": "13",
       "name": "13",
-      "route": "V. YOLLAR",
+      "route": "DÖRTYOL - V. YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-14",
       "code": "14",
       "name": "14",
-      "route": "V. KARAKESME",
+      "route": "DÖRTYOL - V. KARAKESME",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-15",
       "code": "15",
       "name": "15",
-      "route": "V. RABAT",
+      "route": "DÖRTYOL - V. RABAT",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-16",
       "code": "16",
       "name": "16",
-      "route": "V. Ç. GÜL CAMİ",
+      "route": "PAYAS - V. Ç. GÜL CAMİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-17",
       "code": "17",
       "name": "17",
-      "route": "V. SON DURAK / K. BEYAZ",
+      "route": "PAYAS - V. SON DURAK / K. BEYAZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-18",
       "code": "18",
       "name": "18",
-      "route": "ŞEH. ÇEVK",
+      "route": "PAYAS - ŞEH. ÇEVK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-19",
       "code": "19",
       "name": "19",
-      "route": "BULVAR",
+      "route": "OSMANİYE - BULVAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-20",
       "code": "20",
       "name": "20",
-      "route": "V. CUMH. SPOR",
+      "route": "OSMANİYE - V. CUMH. SPOR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-21",
       "code": "21",
       "name": "21",
-      "route": "KARACAY / BAŞ. MAH. 7 OCAK",
+      "route": "OSMANİYE - KARACAY / BAŞ. MAH. 7 OCAK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-22",
       "code": "22",
       "name": "22",
-      "route": "KARACAY / BAŞ. MAH.",
+      "route": "OSMANİYE - KARACAY / BAŞ. MAH.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-23",
       "code": "23",
       "name": "23",
-      "route": "ERZİN / KÖY-K. YİĞ",
+      "route": "ERZİN - ERZİN / KÖY-K. YİĞ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-24",
       "code": "24",
       "name": "24",
-      "route": "İDÇ / SK",
+      "route": "KUZUCULU - İDÇ / SK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-25",
       "code": "25",
       "name": "25",
-      "route": "MERKEZ / YOLLAR",
+      "route": "DÖRTYOL - MERKEZ / YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-26",
       "code": "26",
       "name": "26",
-      "route": "MERKEZ",
+      "route": "DÖRTYOL - MERKEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-27",
       "code": "27",
       "name": "27",
-      "route": "SON DURAK",
+      "route": "PAYAS - SON DURAK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-28",
       "code": "28",
       "name": "28",
-      "route": "V. ÇAĞLALIK - TOKİ",
+      "route": "PAYAS - V. ÇAĞLALIK - TOKİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-29",
       "code": "29",
       "name": "29",
-      "route": "V. KHAN",
+      "route": "KIRIKHAN/BELEN - V. KHAN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-30",
       "code": "30",
       "name": "30",
-      "route": "V. BELEN",
+      "route": "KIRIKHAN/BELEN - V. BELEN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-31",
       "code": "31",
       "name": "31",
-      "route": "V. ŞEKERE / 400 EVLER",
+      "route": "İSKENDERUN - V. ŞEKERE / 400 EVLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-32",
       "code": "32",
       "name": "32",
-      "route": "V. TOKİ / ESENTEPE / ÇANKAYA",
+      "route": "İSKENDERUN - V. TOKİ / ESENTEPE / ÇANKAYA",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-33",
       "code": "33",
       "name": "33",
-      "route": "V. FCAD / D. PINAR",
+      "route": "İSKENDERUN - V. FCAD / D. PINAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-34",
       "code": "34",
       "name": "34",
-      "route": "V. AKBAĞLAR / Y. TEPE",
+      "route": "İSKENDERUN - V. AKBAĞLAR / Y. TEPE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-35",
       "code": "35",
       "name": "35",
-      "route": "V. MOD. / AKBAĞLAR",
+      "route": "İSKENDERUN - V. MOD. / AKBAĞLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-36",
       "code": "36",
       "name": "36",
-      "route": "V. BEKBELE",
+      "route": "BEKBELE/AKÇAY - V. BEKBELE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-37",
       "code": "37",
       "name": "37",
-      "route": "V. KORUMA",
+      "route": "K. YILAN/AZG. - V. KORUMA",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-38",
       "code": "38",
       "name": "38",
-      "route": "V. DENİZCİLER",
+      "route": "DENİZCİLER/AKARCA - V. DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-39",
       "code": "39",
       "name": "39",
-      "route": "V. DENİZCİLER",
+      "route": "DENİZCİLER/AKARCA - V. DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-40",
       "code": "40",
       "name": "40",
-      "route": "V. K. YILAN / AZG.",
+      "route": "K. YILAN/AZG. - V. K. YILAN / AZG.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-41",
       "code": "41",
       "name": "41",
-      "route": "KIRIKHAN",
+      "route": "KIRIKHAN/BELEN - KIRIKHAN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-42",
       "code": "42",
       "name": "42",
-      "route": "ARSUZ / MADEM",
+      "route": "KIRIKHAN/BELEN - ARSUZ / MADEM",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-43",
       "code": "43",
       "name": "43",
-      "route": "BELEN",
+      "route": "KIRIKHAN/BELEN - BELEN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-44",
       "code": "44",
       "name": "44",
-      "route": "ÇERTİMAN - YOLLAR",
+      "route": "KIRIKHAN/BELEN - ÇERTİMAN - YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-45",
       "code": "45",
       "name": "45",
-      "route": "KÖRFEZ / YOLLAR",
+      "route": "İSKENDERUN - KÖRFEZ / YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-46",
       "code": "46",
       "name": "46",
-      "route": "V. 400 EVLER YOLLAR",
+      "route": "İSKENDERUN - V. 400 EVLER YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-47",
       "code": "47",
       "name": "47",
-      "route": "CEBİKE TOKİ / ESENTEPE",
+      "route": "İSKENDERUN - CEBİKE TOKİ / ESENTEPE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-48",
       "code": "48",
       "name": "48",
-      "route": "Y. TEPE / D. PINAR",
+      "route": "İSKENDERUN - Y. TEPE / D. PINAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-49",
       "code": "49",
       "name": "49",
-      "route": "AKBAĞLAR",
+      "route": "İSKENDERUN - AKBAĞLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-50",
       "code": "50",
       "name": "50",
-      "route": "BEKBELE",
+      "route": "BEKBELE/AKÇAY - BEKBELE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-51",
       "code": "51",
       "name": "51",
-      "route": "DENİZCİLER / A. YOLU",
+      "route": "DENİZCİLER/AKARCA - DENİZCİLER / A. YOLU",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-52",
       "code": "52",
       "name": "52",
-      "route": "OSMANİYE",
+      "route": "A/U SERVİSLERİ - OSMANİYE",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-53",
       "code": "53",
       "name": "53",
-      "route": "ERZİN",
+      "route": "A/U SERVİSLERİ - ERZİN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-54",
       "code": "54",
       "name": "54",
-      "route": "DÖRTYOL - PAYAS",
+      "route": "A/U SERVİSLERİ - DÖRTYOL - PAYAS",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-55",
       "code": "55",
       "name": "55",
-      "route": "KUZUCULU TOKİ - DÖRTYOL",
+      "route": "A/U SERVİSLERİ - KUZUCULU TOKİ - DÖRTYOL",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-56",
       "code": "56",
       "name": "56",
-      "route": "BEKBELE - DENİZCİLER",
+      "route": "A/U SERVİSLERİ - BEKBELE - DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-57",
       "code": "57",
       "name": "57",
-      "route": "AKBAĞLAR - MOD. EVLER",
+      "route": "A/U SERVİSLERİ - AKBAĞLAR - MOD. EVLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-58",
       "code": "58",
       "name": "58",
-      "route": "MODERN EVLER",
+      "route": "A/U SERVİSLERİ - MODERN EVLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-59",
       "code": "59",
       "name": "59",
-      "route": "FENER CAD.",
+      "route": "A/U SERVİSLERİ - FENER CAD.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-60",
       "code": "60",
       "name": "60",
-      "route": "ARSUZ",
+      "route": "A/U SERVİSLERİ - ARSUZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-61",
       "code": "61",
       "name": "61",
-      "route": "BELEN - GEDİK",
+      "route": "A/U SERVİSLERİ - BELEN - GEDİK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-62",
       "code": "62",
       "name": "62",
-      "route": "DENİZCİLER / SHELL",
+      "route": "DENİZCİLER/AKARCA - DENİZCİLER / SHELL",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1145,70 +1145,70 @@
       "id": "service-69",
       "code": "69",
       "name": "69",
-      "route": "ÇAĞLALIK / KAYAS MEMUR",
+      "route": "A/U SERVİSLERİ - ÇAĞLALIK / KAYAS MEMUR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-70",
       "code": "70",
       "name": "70",
-      "route": "ESENTEPE / ÇANKAYA",
+      "route": "İSKENDERUN - ESENTEPE / ÇANKAYA",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-71",
       "code": "71",
       "name": "71",
-      "route": "PIRILIK / MEKAL MEMUR",
+      "route": "A/U SERVİSLERİ - PIRILIK / MEKAL MEMUR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-72",
       "code": "72",
       "name": "72",
-      "route": "ÇANTAŞA TOKİ - DENİZCİLER",
+      "route": "A/U SERVİSLERİ - ÇANTAŞA TOKİ - DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-73",
       "code": "73",
       "name": "73",
-      "route": "MUSTAFA KEMAL",
+      "route": "İSKENDERUN - MUSTAFA KEMAL",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-74",
       "code": "74",
       "name": "74",
-      "route": "V. HÜSEYİN YOLLAR",
+      "route": "İSKENDERUN - V. HÜSEYİN YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-75",
       "code": "75",
       "name": "75",
-      "route": "KIRIKHAN YOLLAR",
+      "route": "KIRIKHAN/BELEN - KIRIKHAN YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-76",
       "code": "76",
       "name": "76",
-      "route": "KARAAĞAÇ",
+      "route": "A/U SERVİSLERİ - KARAAĞAÇ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-77",
       "code": "77",
       "name": "77",
-      "route": "ERZİN",
+      "route": "ERZİN - ERZİN",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-78",
       "code": "78",
       "name": "78",
-      "route": "V. FAKIUŞAĞI / B. MAH.",
+      "route": "OSMANİYE - V. FAKIUŞAĞI / B. MAH.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1222,77 +1222,77 @@
       "id": "service-80",
       "code": "80",
       "name": "80",
-      "route": "K. AĞAÇ SAĞ. OCAĞI YÜKS. KUL.",
+      "route": "İSKENDERUN - K. AĞAÇ SAĞ. OCAĞI YÜKS. KUL.",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-81",
       "code": "81",
       "name": "81",
-      "route": "MERKEZ",
+      "route": "DÖRTYOL - MERKEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-82",
       "code": "82",
       "name": "82",
-      "route": "K. ANT. TOP. KIZI",
+      "route": "KIRIKHAN/BELEN - K. ANT. TOP. KIZI",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-83",
       "code": "83",
       "name": "83",
-      "route": "BELEN YOLLAR 08:00/16:00",
+      "route": "KIRIKHAN/BELEN - BELEN YOLLAR 08:00/16:00",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-84",
       "code": "84",
       "name": "84",
-      "route": "VARSAK",
+      "route": "KIRIKHAN/BELEN - VARSAK",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-85",
       "code": "85",
       "name": "85",
-      "route": "ANT. VATAN / GAZİ K. GİDİŞ",
+      "route": "KIRIKHAN/BELEN - ANT. VATAN / GAZİ K. GİDİŞ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-86",
       "code": "86",
       "name": "86",
-      "route": "YENİ PTT - DÖNMEZ",
+      "route": "İSKENDERUN - YENİ PTT - DÖNMEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-87",
       "code": "87",
       "name": "87",
-      "route": "V. DENİZCİLER",
+      "route": "DENİZCİLER/AKARCA - V. DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-88",
       "code": "88",
       "name": "88",
-      "route": "BEKBELE / DENİZCİLER",
+      "route": "BEKBELE/AKÇAY - BEKBELE / DENİZCİLER",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-89",
       "code": "89",
       "name": "89",
-      "route": "V. KUZUCULU TOKİ",
+      "route": "KUZUCULU - V. KUZUCULU TOKİ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
       "id": "service-90",
       "code": "90",
       "name": "90",
-      "route": "KUZUCULU / YOLLAR",
+      "route": "KUZUCULU - KUZUCULU / YOLLAR",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1306,7 +1306,7 @@
       "id": "service-92",
       "code": "92",
       "name": "92",
-      "route": "KÖRFEZ",
+      "route": "A/U SERVİSLERİ - KÖRFEZ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1320,7 +1320,7 @@
       "id": "service-94",
       "code": "94",
       "name": "94",
-      "route": "V. PIRILIK TOKİ - KARAAĞAÇ",
+      "route": "KIRIKHAN/BELEN - V. PIRILIK TOKİ - KARAAĞAÇ",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1348,7 +1348,7 @@
       "id": "service-98",
       "code": "98",
       "name": "98",
-      "route": "MERKEZ / PAYAS",
+      "route": "DÖRTYOL - MERKEZ / PAYAS",
       "createdAt": "2026-08-29T11:12:40.975Z"
     },
     {
@@ -1362,7 +1362,7 @@
       "id": "service-07",
       "code": "07",
       "name": "07",
-      "route": "V. DERE",
+      "route": "ERZİN - V. DERE",
       "createdAt": "2026-09-06T17:48:33.366Z"
     }
   ],
