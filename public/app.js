@@ -21,6 +21,15 @@ const adminLoginBtn = document.getElementById('adminLoginBtn');
 const serviceSelect = document.getElementById('serviceSelect');
 const serviceOptionList = document.getElementById('serviceOptionList');
 const joinServiceBtn = document.getElementById('joinServiceBtn');
+const driverJoinServiceBtn = document.getElementById('driverJoinServiceBtn');
+const personelJoinServiceBtn = document.getElementById('personelJoinServiceBtn');
+const driverNotificationsBtn = document.getElementById('driverNotificationsBtn');
+const personelNotificationsBtn = document.getElementById('personelNotificationsBtn');
+const driverNotificationList = document.getElementById('driverNotificationList');
+const adminNotificationForm = document.getElementById('adminNotificationForm');
+const adminNotificationAudience = document.getElementById('adminNotificationAudience');
+const adminNotificationLabel = document.getElementById('adminNotificationLabel');
+const adminNotificationMessage = document.getElementById('adminNotificationMessage');
 const logoutBtn = document.getElementById('logoutBtn');
 const themeToggle = document.getElementById('themeToggle');
 const notificationToggle = document.getElementById('notificationToggle');
@@ -682,18 +691,19 @@ function renderLiveMap() {
 }
 
 function renderNotifications() {
+  const lists = [notificationList, driverNotificationList].filter(Boolean);
   if (!state.notifications.length) {
-    notificationList.innerHTML = '<li>Henüz bildirim alınmadı.</li>';
+    lists.forEach((list) => { list.innerHTML = '<li>Henüz bildirim alınmadı.</li>'; });
     return;
   }
 
   const visibleNotifications = state.notifications.filter((item) => item.type !== 'driver_location');
   if (!visibleNotifications.length) {
-    notificationList.innerHTML = '<li>Henüz bildirim alınmadı.</li>';
+    lists.forEach((list) => { list.innerHTML = '<li>Henüz bildirim alınmadı.</li>'; });
     return;
   }
 
-  notificationList.innerHTML = visibleNotifications.map((item) => `
+  const markup = visibleNotifications.map((item) => `
     <li>
       <strong>${escapeHtml(item.label || 'Servis Bildirimi')}</strong>
       <div>${escapeHtml(item.message || 'Güncelleme var.')}</div>
@@ -701,6 +711,7 @@ function renderNotifications() {
       <small>${escapeHtml(new Date(item.createdAt).toLocaleString('tr-TR'))}</small>
     </li>
   `).join('');
+  lists.forEach((list) => { list.innerHTML = markup; });
 }
 
 async function clearNotificationHistory() {
@@ -741,7 +752,7 @@ function render() {
   }
 
   userBadge.textContent = `${state.user.role.toUpperCase()} • ${state.user.name}`;
-  headerTitle.textContent = state.user.role === 'driver' ? 'Sürücü Kontrol Paneli' : state.user.role === 'admin' ? 'Admin Yönetim Paneli' : 'Personel Durum Paneli';
+  headerTitle.textContent = state.user.role === 'driver' ? 'Şoför Kontrol Paneli' : state.user.role === 'admin' ? 'Admin Yönetim Paneli' : 'Personel Durum Paneli';
 
   driverView.style.display = state.user.role === 'driver' ? 'block' : 'none';
   personelView.style.display = state.user.role === 'personel' ? 'block' : 'none';
@@ -851,13 +862,13 @@ async function handleRegister(event) {
   }
 }
 
-async function joinSelectedService() {
+async function joinSelectedService(button = joinServiceBtn || driverJoinServiceBtn || personelJoinServiceBtn) {
   if (!state.selectedServiceId) {
     window.alert('Lütfen bir servis seçin.');
     return;
   }
 
-  await runAdminAction(joinServiceBtn, async () => {
+  await runAdminAction(button, async () => {
     const result = await fetchJson('/api/join-service', {
       method: 'POST',
       body: JSON.stringify({ serviceId: state.selectedServiceId })
@@ -886,6 +897,12 @@ registerForm.addEventListener('submit', handleRegister);
 if (joinServiceBtn) {
   joinServiceBtn.addEventListener('click', joinSelectedService);
 }
+if (driverJoinServiceBtn) {
+  driverJoinServiceBtn.addEventListener('click', () => joinSelectedService(driverJoinServiceBtn));
+}
+if (personelJoinServiceBtn) {
+  personelJoinServiceBtn.addEventListener('click', () => joinSelectedService(personelJoinServiceBtn));
+}
 logoutBtn.addEventListener('click', logout);
 serviceSelect.addEventListener('focus', renderServiceOptionList);
 serviceSelect.addEventListener('input', renderServiceOptionList);
@@ -901,6 +918,43 @@ document.addEventListener('click', (event) => {
 });
 
 adminReportSearch.addEventListener('input', renderAdminReports);
+
+function toggleNotificationList(button, list) {
+  if (!list) return;
+  const willShow = list.hidden;
+  list.hidden = !willShow;
+  button.textContent = willShow ? 'Bildirimleri Gizle' : 'Bildirimleri Göster';
+}
+
+if (driverNotificationsBtn) {
+  driverNotificationsBtn.addEventListener('click', () => toggleNotificationList(driverNotificationsBtn, driverNotificationList));
+}
+if (personelNotificationsBtn) {
+  personelNotificationsBtn.addEventListener('click', () => toggleNotificationList(personelNotificationsBtn, notificationList));
+}
+
+if (adminNotificationForm) {
+  adminNotificationForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (state.user?.role !== 'admin') return;
+    const serviceId = adminNotificationAudience.value === 'all' ? 'all' : state.selectedServiceId;
+    if (!serviceId) {
+      window.alert('Seçili bir servis belirleyin veya tüm servisleri seçin.');
+      return;
+    }
+    const button = adminNotificationForm.querySelector('button[type="submit"]');
+    await runAdminAction(button, async () => {
+      await sendNotification({
+        serviceId,
+        type: 'admin_announcement',
+        label: adminNotificationLabel.value.trim() || 'Yönetim Duyurusu',
+        message: adminNotificationMessage.value.trim()
+      });
+      adminNotificationLabel.value = '';
+      adminNotificationMessage.value = '';
+    }, 'Gönderildi');
+  });
+}
 
 
 document.querySelectorAll('.action-button').forEach((button) => {

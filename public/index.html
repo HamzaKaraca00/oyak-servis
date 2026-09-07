@@ -75,7 +75,7 @@
               <span class="role-select-label">Rol</span>
               <div class="role-tabs" role="group" aria-label="Rol seçimi">
                 <button type="button" class="role-tab-button active" data-role="personel" aria-pressed="true">Personel</button>
-                <button type="button" class="role-tab-button" data-role="driver" aria-pressed="false">Sürücü</button>
+                <button type="button" class="role-tab-button" data-role="driver" aria-pressed="false">Şoför</button>
               </div>
               <input type="hidden" name="role" id="registerRole" value="personel" />
             </div>
@@ -123,6 +123,28 @@
             <ul id="serviceAdminList" class="notification-list compact"></ul>
           </div>
 
+          <div class="log-panel admin-notification-panel">
+            <h4>Yönetim Bildirimi Gönder</h4>
+            <label>
+              Gönderim hedefi
+              <select id="adminNotificationAudience">
+                <option value="selected">Seçili servise</option>
+                <option value="all">Tüm servisler</option>
+              </select>
+            </label>
+            <form id="adminNotificationForm" class="message-form">
+              <label>
+                Bildirim başlığı
+                <input id="adminNotificationLabel" type="text" maxlength="120" placeholder="Önemli duyuru" />
+              </label>
+              <label>
+                Bildirim metni
+                <input id="adminNotificationMessage" type="text" maxlength="500" placeholder="Duyuru metnini yazın" required />
+              </label>
+              <button class="primary-button" type="submit">Bildirimi Gönder</button>
+            </form>
+          </div>
+
         </div>
 
         <div id="servicePanel" class="service-panel">
@@ -135,12 +157,17 @@
 
         <div id="driverView" class="role-panel">
           <div class="panel-header">
-            <h3>Sürücü Paneli</h3>
+            <h3>Şoför Paneli</h3>
             <span id="driverServiceLabel" class="badge soft">Seçilmemiş</span>
           </div>
           <div class="status-box" id="driverStatusBox">
             Henüz aktif servis seçilmedi.
           </div>
+          <div class="quick-actions compact-actions">
+            <button id="driverJoinServiceBtn" class="primary-button" type="button">Kanala Bağlan</button>
+            <button id="driverNotificationsBtn" class="secondary-button" type="button">Bildirimleri Göster</button>
+          </div>
+          <ul id="driverNotificationList" class="notification-list" hidden></ul>
 
           <div class="quick-actions utility-actions">
             <button class="action-button info" data-alert="delayed" data-label="Rötar bildirimi" data-message="🚌 Serviste gecikme var." data-stage="delayed">Rötar Bildir</button>
@@ -165,6 +192,8 @@
             Aktif servis bildirimi bekleniyor.
           </div>
           <div class="quick-actions compact-actions">
+            <button id="personelJoinServiceBtn" class="primary-button" type="button">Kanala Bağlan</button>
+            <button id="personelNotificationsBtn" class="secondary-button" type="button">Bildirimleri Göster</button>
             <button id="requestLocationBtn" class="action-button secondary-location" type="button">Servisim Nerede?</button>
           </div>
           <div class="live-map-card">
@@ -181,7 +210,7 @@
           <div class="history-actions">
             <button id="clearHistoryBtn" class="secondary-button danger-button" type="button">Geçmişi Sil</button>
           </div>
-          <ul id="notificationList" class="notification-list"></ul>
+          <ul id="notificationList" class="notification-list" hidden></ul>
         </div>
 
         <div id="adminHistoryPanel" class="role-panel admin-panel">

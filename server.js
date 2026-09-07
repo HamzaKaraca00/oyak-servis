@@ -427,7 +427,10 @@ async function createNotification(logEntry) {
   db.logs.unshift(logEntry);
   db.notifications = Array.isArray(db.notifications) ? db.notifications : [];
 
-  const recipients = db.users.filter((user) => user.serviceId === logEntry.serviceId && user.id !== logEntry.senderId);
+  const recipients = db.users.filter((user) => (
+    (logEntry.serviceId === null || user.serviceId === logEntry.serviceId) &&
+    user.id !== logEntry.senderId
+  ));
   const filteredRecipients = recipients.filter((user) => {
     if (logEntry.type === 'driver_location') {
       return user.role === 'personel';
@@ -869,10 +872,14 @@ app.post('/api/notify', requireAuth, async (req, res) => {
 
   const db = await readDb();
   const sender = db.users.find((entry) => entry.id === req.user.id);
-  const service = db.services.find((entry) => entry.id === serviceId);
-  if (!sender || !service) return res.status(404).json({ message: 'Servis veya kullanıcı bulunamadı.' });
+  const isBroadcast = serviceId === 'all';
+  const service = isBroadcast ? null : db.services.find((entry) => entry.id === serviceId);
+  if (!sender || (!service && !isBroadcast)) return res.status(404).json({ message: 'Servis veya kullanıcı bulunamadı.' });
+  if (isBroadcast && sender.role !== 'admin') {
+    return res.status(403).json({ message: 'Tüm servislere bildirim gönderme yetkiniz yok.' });
+  }
 
-  if (sender.role !== 'admin' && sender.serviceId !== serviceId) {
+  if (!isBroadcast && sender.role !== 'admin' && sender.serviceId !== serviceId) {
     return res.status(403).json({ message: 'Bu servise bildirim gönderme yetkiniz yok.' });
   }
   if (sender.role === 'personel' && type !== 'location_request') {
@@ -881,7 +888,7 @@ app.post('/api/notify', requireAuth, async (req, res) => {
   if (sender.role === 'driver' && !['departure_10', 'departure_5', 'departed', 'arrival_10', 'arrival_5', 'arrived', 'delayed', 'driver_location', 'message'].includes(type)) {
     return res.status(400).json({ message: 'Geçersiz sürücü bildirimi.' });
   }
-  if (sender.role === 'admin' && !['departure_10', 'departure_5', 'departed', 'arrival_10', 'arrival_5', 'arrived', 'delayed', 'driver_location', 'message', 'location_request', 'test'].includes(type)) {
+  if (sender.role === 'admin' && !['departure_10', 'departure_5', 'departed', 'arrival_10', 'arrival_5', 'arrived', 'delayed', 'driver_location', 'message', 'location_request', 'admin_announcement', 'test'].includes(type)) {
     return res.status(400).json({ message: 'Geçersiz bildirim türü.' });
   }
 
@@ -903,7 +910,7 @@ app.post('/api/notify', requireAuth, async (req, res) => {
 
   const logEntry = {
     id: randomUUID(),
-    serviceId,
+    serviceId: isBroadcast ? null : serviceId,
     type: String(type).trim(),
     label: String(label || 'Servis Bildirimi').trim().slice(0, 120),
     message: String(message || '').trim().slice(0, 500),
@@ -1014,7 +1021,7 @@ app.get('/api/services/:id/notifications', requireAuth, async (req, res) => {
   const sinceTime = since ? new Date(since).getTime() : 0;
 
   const entries = (db.logs || [])
-    .filter((log) => log.serviceId === req.params.id)
+    .filter((log) => log.serviceId === req.params.id || log.serviceId === null)
     .filter((log) => new Date(log.createdAt).getTime() > sinceTime)
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
     .slice(-50);
