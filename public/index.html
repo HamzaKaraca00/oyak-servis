@@ -97,7 +97,20 @@
             <img class="oyak-logo" src="/oyak-logo.svg?v=official-1" alt="OYAK" />
             <span id="connectionStatus" class="connection-status" role="status">Çevrimiçi</span>
             <button id="themeToggle" class="icon-button" type="button" aria-label="Temayı değiştir">Açık tema</button>
-            <button id="notificationToggle" class="icon-button" type="button" aria-label="Bildirim ayarlarını değiştir">Bildirimler</button>
+            <button id="notificationToggle" class="icon-button" type="button" aria-label="Tarayıcı bildirimlerini değiştir">İzin</button>
+            <div class="notification-menu">
+              <button id="notificationBellBtn" class="notification-bell" type="button" aria-label="Bildirimleri aç" aria-expanded="false">
+                <span aria-hidden="true">🔔</span>
+                <span id="notificationCount" class="notification-count" hidden>0</span>
+              </button>
+              <div id="notificationPopover" class="notification-popover" hidden>
+                <div class="notification-popover-header">
+                  <strong>Bildirimler</strong>
+                  <button id="notificationPopoverClearBtn" class="notification-clear" type="button">Temizle</button>
+                </div>
+                <ul id="topNotificationList" class="notification-list"></ul>
+              </div>
+            </div>
             <span id="userBadge" class="badge"></span>
             <button id="logoutBtn" class="secondary-button">Çıkış</button>
           </div>

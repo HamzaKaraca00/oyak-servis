@@ -33,6 +33,11 @@ const adminNotificationMessage = document.getElementById('adminNotificationMessa
 const logoutBtn = document.getElementById('logoutBtn');
 const themeToggle = document.getElementById('themeToggle');
 const notificationToggle = document.getElementById('notificationToggle');
+const notificationBellBtn = document.getElementById('notificationBellBtn');
+const notificationCount = document.getElementById('notificationCount');
+const notificationPopover = document.getElementById('notificationPopover');
+const topNotificationList = document.getElementById('topNotificationList');
+const notificationPopoverClearBtn = document.getElementById('notificationPopoverClearBtn');
 const connectionStatus = document.getElementById('connectionStatus');
 const driverView = document.getElementById('driverView');
 const personelView = document.getElementById('personelView');
@@ -691,13 +696,15 @@ function renderLiveMap() {
 }
 
 function renderNotifications() {
-  const lists = [notificationList, driverNotificationList].filter(Boolean);
+  const lists = [notificationList, driverNotificationList, topNotificationList].filter(Boolean);
+  const visibleNotifications = state.notifications.filter((item) => item.type !== 'driver_location');
+  notificationCount.textContent = String(visibleNotifications.length);
+  notificationCount.hidden = visibleNotifications.length === 0;
   if (!state.notifications.length) {
     lists.forEach((list) => { list.innerHTML = '<li>Henüz bildirim alınmadı.</li>'; });
     return;
   }
 
-  const visibleNotifications = state.notifications.filter((item) => item.type !== 'driver_location');
   if (!visibleNotifications.length) {
     lists.forEach((list) => { list.innerHTML = '<li>Henüz bildirim alınmadı.</li>'; });
     return;
@@ -712,6 +719,12 @@ function renderNotifications() {
     </li>
   `).join('');
   lists.forEach((list) => { list.innerHTML = markup; });
+}
+
+function setNotificationPopover(open) {
+  notificationPopover.hidden = !open;
+  notificationBellBtn.setAttribute('aria-expanded', String(open));
+  notificationBellBtn.classList.toggle('is-active', open);
 }
 
 async function clearNotificationHistory() {
@@ -915,9 +928,18 @@ document.addEventListener('click', (event) => {
   if (!event.target.closest('.service-panel')) {
     serviceOptionList.hidden = true;
   }
+  if (!event.target.closest('.notification-menu')) {
+    setNotificationPopover(false);
+  }
 });
 
 adminReportSearch.addEventListener('input', renderAdminReports);
+
+notificationBellBtn.addEventListener('click', () => {
+  setNotificationPopover(notificationPopover.hidden);
+});
+
+notificationPopoverClearBtn.addEventListener('click', clearNotificationHistory);
 
 function toggleNotificationList(button, list) {
   if (!list) return;
