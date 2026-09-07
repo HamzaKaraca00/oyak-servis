@@ -374,7 +374,13 @@ button:disabled {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
   cursor: pointer;
-  font-size: 18px;
+  color: #ffffff;
+}
+
+.notification-bell svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
 .notification-bell:hover,

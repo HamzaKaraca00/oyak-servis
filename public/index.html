@@ -100,7 +100,9 @@
             <button id="notificationToggle" class="icon-button" type="button" aria-label="Tarayıcı bildirimlerini değiştir">İzin</button>
             <div class="notification-menu">
               <button id="notificationBellBtn" class="notification-bell" type="button" aria-label="Bildirimleri aç" aria-expanded="false">
-                <span aria-hidden="true">🔔</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                  <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-4.5 12h-3a1.5 1.5 0 0 0 3 0Z"></path>
+                </svg>
                 <span id="notificationCount" class="notification-count" hidden>0</span>
               </button>
               <div id="notificationPopover" class="notification-popover" hidden>
@@ -178,9 +180,7 @@
           </div>
           <div class="quick-actions compact-actions">
             <button id="driverJoinServiceBtn" class="primary-button" type="button">Kanala Bağlan</button>
-            <button id="driverNotificationsBtn" class="secondary-button" type="button">Bildirimleri Göster</button>
           </div>
-          <ul id="driverNotificationList" class="notification-list" hidden></ul>
 
           <div class="quick-actions utility-actions">
             <button class="action-button info" data-alert="delayed" data-label="Rötar bildirimi" data-message="🚌 Serviste gecikme var." data-stage="delayed">Rötar Bildir</button>
@@ -206,7 +206,6 @@
           </div>
           <div class="quick-actions compact-actions">
             <button id="personelJoinServiceBtn" class="primary-button" type="button">Kanala Bağlan</button>
-            <button id="personelNotificationsBtn" class="secondary-button" type="button">Bildirimleri Göster</button>
             <button id="requestLocationBtn" class="action-button secondary-location" type="button">Servisim Nerede?</button>
           </div>
           <div class="live-map-card">
@@ -223,7 +222,6 @@
           <div class="history-actions">
             <button id="clearHistoryBtn" class="secondary-button danger-button" type="button">Geçmişi Sil</button>
           </div>
-          <ul id="notificationList" class="notification-list" hidden></ul>
         </div>
 
         <div id="adminHistoryPanel" class="role-panel admin-panel">

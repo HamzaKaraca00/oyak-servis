@@ -23,9 +23,6 @@ const serviceOptionList = document.getElementById('serviceOptionList');
 const joinServiceBtn = document.getElementById('joinServiceBtn');
 const driverJoinServiceBtn = document.getElementById('driverJoinServiceBtn');
 const personelJoinServiceBtn = document.getElementById('personelJoinServiceBtn');
-const driverNotificationsBtn = document.getElementById('driverNotificationsBtn');
-const personelNotificationsBtn = document.getElementById('personelNotificationsBtn');
-const driverNotificationList = document.getElementById('driverNotificationList');
 const adminNotificationForm = document.getElementById('adminNotificationForm');
 const adminNotificationAudience = document.getElementById('adminNotificationAudience');
 const adminNotificationLabel = document.getElementById('adminNotificationLabel');
@@ -49,7 +46,6 @@ const dashboardView = document.getElementById('dashboardView');
 const appLoading = document.getElementById('appLoading');
 const userBadge = document.getElementById('userBadge');
 const headerTitle = document.getElementById('headerTitle');
-const notificationList = document.getElementById('notificationList');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const liveMap = document.getElementById('liveMap');
 const liveMapCanvas = document.getElementById('liveMapCanvas');
@@ -696,7 +692,7 @@ function renderLiveMap() {
 }
 
 function renderNotifications() {
-  const lists = [notificationList, driverNotificationList, topNotificationList].filter(Boolean);
+  const lists = [topNotificationList].filter(Boolean);
   const visibleNotifications = state.notifications.filter((item) => item.type !== 'driver_location');
   notificationCount.textContent = String(visibleNotifications.length);
   notificationCount.hidden = visibleNotifications.length === 0;
@@ -940,20 +936,6 @@ notificationBellBtn.addEventListener('click', () => {
 });
 
 notificationPopoverClearBtn.addEventListener('click', clearNotificationHistory);
-
-function toggleNotificationList(button, list) {
-  if (!list) return;
-  const willShow = list.hidden;
-  list.hidden = !willShow;
-  button.textContent = willShow ? 'Bildirimleri Gizle' : 'Bildirimleri Göster';
-}
-
-if (driverNotificationsBtn) {
-  driverNotificationsBtn.addEventListener('click', () => toggleNotificationList(driverNotificationsBtn, driverNotificationList));
-}
-if (personelNotificationsBtn) {
-  personelNotificationsBtn.addEventListener('click', () => toggleNotificationList(personelNotificationsBtn, notificationList));
-}
 
 if (adminNotificationForm) {
   adminNotificationForm.addEventListener('submit', async (event) => {
